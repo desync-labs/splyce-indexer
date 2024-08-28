@@ -1,5 +1,6 @@
 use anyhow::anyhow;
 use serde::Deserialize;
+use substreams::log;
 use substreams_solana::pb::sf::solana::r#type::v1::{Block, CompiledInstruction};
 use crate::pb::sol::transactions::v1::{Instruction, Instructions};
 
@@ -10,6 +11,7 @@ struct InstructionFilterParams {
 
 #[substreams::handlers::map]
 fn map_filter_instructions(params: String, blk: Block) -> Result<Instructions, substreams::errors::Error> {
+    log::info!("Filtering instructions");
     let filters = parse_filters_from_params(params)?;
 
     let instructions : Vec<Instruction> = blk.transactions().flat_map(|tx| {
@@ -23,6 +25,7 @@ fn map_filter_instructions(params: String, blk: Block) -> Result<Instructions, s
                 program_id: bs58::encode(acct_keys[inst.program_id_index as usize].to_vec()).into_string(),
                 accounts: inst.accounts.iter().map(|acct| bs58::encode(acct_keys[*acct as usize].to_vec()).into_string()).collect(),
                 data: inst.data.clone(),//bs58::encode(&inst.data).into_string(),
+                b58_encoded_data: bs58::encode(&inst.data).into_string(),
             }
         }).collect::<Vec<_>>()
     }).collect();

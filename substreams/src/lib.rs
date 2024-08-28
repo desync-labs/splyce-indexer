@@ -5,5 +5,6 @@ mod map_filter_instructions;
 mod map_filter_transactions;
 mod map_block_without_votes;
 mod map_parse_journal_data;
+mod map_parse_vault_data;
 mod parsers;
 mod utils;

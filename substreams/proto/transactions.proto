@@ -11,6 +11,7 @@ message Instruction {
   string program_id = 1;
   repeated string accounts = 2;
   bytes data = 3;
+  string b58_encoded_data = 4;
 }
 
 message Transactions {

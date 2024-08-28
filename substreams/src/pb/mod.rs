@@ -31,5 +31,12 @@ pub mod sol {
             include!("sol.transactions.v1.rs");
             // @@protoc_insertion_point(sol.transactions.v1)
         }
+        pub mod vault {
+            // @@protoc_insertion_point(attribute:sol.transactions.vault.v1)
+            pub mod v1 {
+                include!("sol.transactions.vault.v1.rs");
+                // @@protoc_insertion_point(sol.transactions.vault.v1)
+            }
+        }
     }
 }

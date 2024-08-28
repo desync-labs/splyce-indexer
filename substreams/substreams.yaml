@@ -1,8 +1,8 @@
 specVersion: v0.1.0
 package:
-  name: "solana_journal_explorer"
-  version: v0.3.0
-  url: https://github.com/Tarunshrma/substreams-explorers/
+  name: "splyce_vault_substreams"
+  version: v1.0.0
+  url: https://github.com/Into-the-Fathom/splyce-indexer
   image: ./solana.png
   doc: |
     This packages holds simple modules to allow you to explore the Solana instruction for journal model.
@@ -17,6 +17,7 @@ protobuf:
     - block.proto
     - transactions.proto
     - journals.proto
+    - vault.proto
   importPaths:
     - ./proto
 
@@ -80,7 +81,15 @@ modules:
     doc: |
       `map_parse_journal_data` allows you to parse the raw data into json value.
 
+  - name: map_parse_vault_data
+    kind: map
+    inputs:
+      - map: map_filter_instructions
+    output:
+      type: proto:sol.transactions.vault.v1.Vaults
+    doc: |
+      `map_parse_vault_data` allows you to parse the raw data into json value.
 
 params:
-  map_filter_instructions: "program_id=htemKhSvvj1nKGkReHzwB42fty16B9TuR3JhFk73scQ"
+  map_filter_instructions: "program_id=CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"
   map_filter_transactions: "signature=21ED2HBGuLUwgbaBb77cGwFR8MkVQfjR9KszzCb7jZkeSysJkHAVew6RaaBh3r1zTefpdq9Kf5geFp19P3nUXB3t"
