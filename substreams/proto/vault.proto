@@ -3,7 +3,7 @@ syntax = "proto3";
 package sol.transactions.vault.v1;
 
 message Vault {
-  bytes bump = 1;
+  string address = 1;
   bytes owner = 2;
   bytes underlying_mint = 3;
   bytes underlying_token_acc = 4;

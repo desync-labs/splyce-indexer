@@ -4,3 +4,7 @@ use std::error::Error;
 pub trait DecodeData: Sized {
     fn parse_from_data(data: &[u8], hash_of_accounts:String) -> Result<Self, Box<dyn Error>>;
 }
+
+pub trait DecodeVaultData: Sized {
+    fn parse_from_data(data: &[u8], seed: String) -> Result<Self, Box<dyn Error>>;
+}
