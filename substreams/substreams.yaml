@@ -62,6 +62,18 @@ modules:
     doc: |
       `map_filter_instructions` allows you to get instructions executed by a certain `program_id`, and returns the raw Instruction data model.
 
+
+  - name: map_filter_vault_strategy_instructions
+    kind: map
+    inputs:
+      - params: string
+      - source: sf.solana.type.v1.Block
+    output:
+      type: proto:sol.transactions.v1.Instructions
+    doc: |
+      `map_filter_vault_strategy_instructions` allows you to get vault strategy instructions executed by a certain `program_id`, and returns the raw Instruction data model.
+
+
   - name: map_filter_transactions
     kind: map
     inputs:
@@ -92,4 +104,5 @@ modules:
 
 params:
   map_filter_instructions: "program_id=CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"
+  map_filter_vault_strategy_instructions: "program_id=ErJGueTn3xVKETP4dc8vrmS5Lu7iupJZ2pr7kYJkCtUE"
   map_filter_transactions: "signature=21ED2HBGuLUwgbaBb77cGwFR8MkVQfjR9KszzCb7jZkeSysJkHAVew6RaaBh3r1zTefpdq9Kf5geFp19P3nUXB3t"
