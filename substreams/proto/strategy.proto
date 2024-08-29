@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package sol.transactions.strategy.v1;
+
+message Strategy {
+  string address = 1;
+  bytes vault = 2;
+  bytes underlying_mint = 3;
+  bytes underlying_token_acc = 4;
+  uint32 underlying_decimals = 5;
+  uint64 total_funds = 6;
+  uint64 total_shares = 7;
+  uint64 deposit_limit = 8;
+}
+
+message Strategies {
+  repeated Strategy strategies = 1;
+}

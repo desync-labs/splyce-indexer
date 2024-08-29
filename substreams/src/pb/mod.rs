@@ -26,6 +26,13 @@ pub mod sol {
                 // @@protoc_insertion_point(sol.transactions.journal.v1)
             }
         }
+        pub mod strategy {
+            // @@protoc_insertion_point(attribute:sol.transactions.strategy.v1)
+            pub mod v1 {
+                include!("sol.transactions.strategy.v1.rs");
+                // @@protoc_insertion_point(sol.transactions.strategy.v1)
+            }
+        }
         // @@protoc_insertion_point(attribute:sol.transactions.v1)
         pub mod v1 {
             include!("sol.transactions.v1.rs");

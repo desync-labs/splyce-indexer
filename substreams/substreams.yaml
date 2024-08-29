@@ -18,6 +18,7 @@ protobuf:
     - transactions.proto
     - journals.proto
     - vault.proto
+    - strategy.proto
   importPaths:
     - ./proto
 
@@ -107,7 +108,7 @@ modules:
     inputs:
       - map: map_filter_vault_strategy_instructions
     output:
-      type: proto:sol.transactions.vault.v1.Vaults
+      type: proto:sol.transactions.strategy.v1.Strategies
     doc: |
       `map_parse_vault_data` allows you to parse the raw data into json value.
 
