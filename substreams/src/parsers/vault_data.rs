@@ -4,7 +4,7 @@
 
 use substreams::log;
 
-use crate::{pb::sol::transactions::vault::v1::Vault,utils::{constants::{InstructionType, DISCRIMINATOR}, utils::read_descriptor}};
+use crate::{pb::sol::transactions::vault::v1::Vault,utils::{constants::{VaultInstructions, DISCRIMINATOR}, utils::read_descriptor}};
 use std::error::Error;
 use super::decode_data::{DecodeData, DecodeVaultData};
 
@@ -90,7 +90,7 @@ impl DecodeVaultData for Vault {
     fn parse_from_data(data: &[u8], seed: String) -> Result<Self, Box<dyn Error>> {
         let descriptor:&[u8] = read_descriptor(&data);
         
-        let vault_instruction_type = InstructionType::VaultInit;
+        let vault_instruction_type = VaultInstructions::Initialize;
     
         // Check if the descriptor matches the value of the enum variant
         if vault_instruction_type.matches(descriptor) {

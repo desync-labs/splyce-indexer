@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package sol.transactions.vault.v1;
+
+message Vault {
+  string address = 1;
+  bytes owner = 2;
+  bytes underlying_mint = 3;
+  bytes underlying_token_acc = 4;
+  uint32 underlying_decimals = 5;
+  uint64 total_debt = 6;
+  uint64 total_shares = 7;
+  uint64 deposit_limit = 8;
+  uint64 min_user_deposit = 9;
+  bool is_shutdown = 10;
+  repeated bytes strategies = 11;
+}
+
+message Vaults {
+  repeated Vault vaults = 1;
+}

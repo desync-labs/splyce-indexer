@@ -8,3 +8,7 @@ pub trait DecodeData: Sized {
 pub trait DecodeVaultData: Sized {
     fn parse_from_data(data: &[u8], seed: String) -> Result<Self, Box<dyn Error>>;
 }
+
+pub trait DecodeVaultStratagyData: Sized {
+    fn parse_from_data(data: &[u8], seed: String) -> Result<Self, Box<dyn Error>>;
+}
