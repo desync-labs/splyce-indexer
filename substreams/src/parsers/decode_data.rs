@@ -10,5 +10,5 @@ pub trait DecodeVaultData: Sized {
 }
 
 pub trait DecodeVaultStratagyData: Sized {
-    fn parse_from_data(data: &[u8], seed: String) -> Result<Self, Box<dyn Error>>;
+    fn parse_from_data(data: &[u8], seed: String, event_data:Vec<u8>) -> std::result::Result<Self, Box<dyn Error>>;
 }

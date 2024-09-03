@@ -26,6 +26,7 @@ fn map_filter_instructions(params: String, blk: Block) -> Result<Instructions, s
                 accounts: inst.accounts.iter().map(|acct| bs58::encode(acct_keys[*acct as usize].to_vec()).into_string()).collect(),
                 data: inst.data.clone(),//bs58::encode(&inst.data).into_string(),
                 b58_encoded_data: bs58::encode(&inst.data).into_string(),
+                event_log: Vec::new(),
             }
         }).collect::<Vec<_>>()
     }).collect();

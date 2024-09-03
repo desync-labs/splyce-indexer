@@ -22,10 +22,14 @@ protobuf:
   importPaths:
     - ./proto
 
+# binaries:
+#   default:
+#     type: wasm/rust-v1
+#     file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 binaries:
   default:
-    type: wasm/rust-v1
-    file: ./target/wasm32-unknown-unknown/release/substreams.wasm
+    type: wasm/rust-v1+wasm-bindgen-shims
+    file: target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
   - name: map_block_full

@@ -12,6 +12,7 @@ message Instruction {
   repeated string accounts = 2;
   bytes data = 3;
   string b58_encoded_data = 4;
+  bytes event_log = 5;
 }
 
 message Transactions {

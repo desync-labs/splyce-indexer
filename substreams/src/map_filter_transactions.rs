@@ -33,6 +33,7 @@ fn map_filter_transactions(params: String, blk: Block) -> Result<Transactions, V
                         .collect(),
                     data: inst.data.clone(),
                     b58_encoded_data: bs58::encode(&inst.data).into_string(),
+                    event_log: Vec::new(),
                 })
                 .collect();
 
