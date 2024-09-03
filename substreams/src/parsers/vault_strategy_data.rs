@@ -16,7 +16,7 @@ pub struct VaultStrategyInitEvent {
 impl DecodeVaultStratagyData for Strategy {
     fn parse_from_data(data: &[u8], seed: String, event_data:Vec<u8>) -> std::result::Result<Self, Box<dyn Error>> {
 
-        log::info!("decoding vault strategy event  {:#?}",event_data);
+        // log::info!("decoding vault strategy event  {:#?}",event_data);
 
         //Decoding event data
         let mut slice: &[u8] = &event_data[..];
@@ -31,30 +31,26 @@ impl DecodeVaultStratagyData for Strategy {
                 .map_err(|e| Box::new(e) as Box<dyn Error>)?;
 
 
-        log::info!("decoding vault strategy event  {:#?}",event);
-
-
-        // log::info!("decoding vault strategy data  {:?}",data);
         let descriptor:&[u8] = read_descriptor(&data);
         
         let vault_strategy_instruction_type = VaultStrategyInstructions::Initialize;
     
         // Check if the descriptor matches the value of the enum variant
         if vault_strategy_instruction_type.matches(descriptor) {
-            return get_vault_strategy_init_data(seed);
+            return get_vault_strategy_init_data(seed,event);
         } else {
             return Err("Invalid instruction type".into());
         }
 
         //Initilize the vault
-        fn get_vault_strategy_init_data(seed: String) -> std::result::Result<Strategy, Box<dyn Error>> {
+        fn get_vault_strategy_init_data(seed: String, event: VaultStrategyInitEvent) -> std::result::Result<Strategy, Box<dyn Error>> {
             Ok(Strategy {
                 address: seed,
                 underlying_mint: Vec::new(),
                 underlying_token_acc: Vec::new(),
                 underlying_decimals: 0,
                 total_shares: 0,
-                deposit_limit: 0,
+                deposit_limit: event.deposit_limit,
                 vault: Vec::new(),
                 total_funds: 0,
             })
