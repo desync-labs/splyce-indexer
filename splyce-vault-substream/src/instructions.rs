@@ -68,7 +68,8 @@ fn filtered_instructions_without_votes(
                         // Obtain the slice
                         let sub_slice: &[u8] = &borsh_bytes[start_index..start_index + length];
 
-                        let discriminator = read_descriptor(&view.data()); 
+                        let discriminator = read_descriptor(&view.data());
+
                         if sub_slice == discriminator {
                             log::info!("Discriminator matched");
                             event_log = borsh_bytes.clone();
@@ -76,12 +77,15 @@ fn filtered_instructions_without_votes(
                             log::info!("Discriminator did not match");
                         }
                     });
+                    
+                    log::info!("Discriminator = {:?}", read_descriptor(&view.data()));
 
                     Some(Instruction {
                         program_id,
                         accounts,
                         data,
                         tx_hash: String::from("0x00"), //TODO: Add tx_hash
+                        event_log,
                     })
                 } else {
                     None

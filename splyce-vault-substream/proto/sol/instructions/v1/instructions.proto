@@ -11,4 +11,5 @@ message Instruction {
   repeated string accounts = 2;
   bytes data = 3;
   string tx_hash = 4;
+  bytes event_log = 5;
 }
