@@ -16,12 +16,13 @@ protobuf:
   files:
     - sol/instructions/v1/instructions.proto
     - sol/transactions/v1/transactions.proto
+    - sol/events/v1/events.proto
   importPaths:
     - ./proto
 
 binaries:
   default:
-    type: wasm/rust-v1
+    type: wasm/rust-v1+wasm-bindgen-shims
     file: ./target/wasm32-unknown-unknown/release/substreams.wasm
 
 modules:
@@ -73,7 +74,17 @@ modules:
     doc: |
       `map_filter_instructions_without_votes` allows you to get instructions executed by a certain `program_id`, and returns the raw Instruction data model.
 
+  - name: map_vault_events_from_instructions
+    kind: map
+    inputs:
+      - map: filtered_instructions_without_votes
+    output:
+      type: proto:vault.events.v1.Vaults
+    doc: |
+      `map_vault_events_from_instructions` allows you to get event vault data.
+
 
 params: # Default parameters for the filter modules. You can override these parameters based on your needs.
   filtered_transactions_without_votes: "program:CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"
   filtered_instructions_without_votes: "program:CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"
+#

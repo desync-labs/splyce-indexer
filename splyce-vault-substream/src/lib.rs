@@ -4,3 +4,5 @@ mod index;
 mod block;
 mod instructions;
 mod utils;
+mod vaults;
+mod events;
