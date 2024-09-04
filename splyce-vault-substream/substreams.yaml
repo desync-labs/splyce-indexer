@@ -63,5 +63,17 @@ modules:
       Example: to only consume TRANSACTIONS containing Token or ComputeBudget instructions: `program:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA || program:ComputeBudget111111111111111111111111111111`.
       Transactions containing `Vote111111111111111111111111111111111111111` are always excluded.
 
+  - name: filtered_instructions_without_votes
+    kind: map
+    inputs:
+      - params: string
+      - map: blocks_without_votes
+    output:
+      type: proto:sol.instructions.v1.Instructions
+    doc: |
+      `map_filter_instructions_without_votes` allows you to get instructions executed by a certain `program_id`, and returns the raw Instruction data model.
+
+
 params: # Default parameters for the filter modules. You can override these parameters based on your needs.
-  filtered_transactions_without_votes: "program:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA"
+  filtered_transactions_without_votes: "program:CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"
+  filtered_instructions_without_votes: "program:CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"
