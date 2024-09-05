@@ -79,7 +79,7 @@ modules:
     inputs:
       - map: filtered_instructions_without_votes
     output:
-      type: proto:vault.events.v1.Vaults
+      type: proto:vault.events.v1.VaultEvent
     doc: |
       `map_vault_events_from_instructions` allows you to get event vault data.
 

@@ -1,7 +1,7 @@
 use anchor_lang::prelude::*;
 
 #[derive(Debug, AnchorDeserialize, AnchorSerialize)]
-pub struct VaultInitEvent {
+pub struct VaultInitLog {
     pub event_id: [u8 ; 8],    
     pub underlying_mint: [u8 ; 32],
     pub underlying_token_acc: [u8 ; 32],

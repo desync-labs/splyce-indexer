@@ -1,16 +1,15 @@
 use substreams::log;
 use anchor_lang::AnchorDeserialize;
-
-use crate::{events::vaults::VaultInitEvent,
-            pb::{sol::instructions::v1::Instructions,
-            vault::events::v1::{Vault, Vaults}}
+use crate::{events::vaults::VaultInitLog,
+            pb::{sol::instructions::v1::Instructions, vault::events::v1::{vault_event, VaultEvent, VaultInitEvent},
+        }
         };
 
 #[substreams::handlers::map]
-fn map_vault_events_from_instructions(insts: Instructions) -> Result<Vaults, substreams::errors::Error> {
+fn map_vault_events_from_instructions(insts: Instructions) -> Result<VaultEvent, substreams::errors::Error> {
     log::info!("Parsing vault event data");
 
-    let mut vault_data = Vec::new();
+    let mut vault_event:VaultEvent = VaultEvent::default();
 
     for inst in insts.instructions.iter() {
         
@@ -22,31 +21,26 @@ fn map_vault_events_from_instructions(insts: Instructions) -> Result<Vaults, sub
             disc
         };
 
-        let deserialize_result: Result<VaultInitEvent, std::io::Error> = AnchorDeserialize::deserialize(&mut slice);
-
-        match deserialize_result {
+        //TODO: put a switch case or some generic approach here.
+        let deserialize_log: Result<VaultInitLog, std::io::Error> = AnchorDeserialize::deserialize(&mut slice);
+        
+        match deserialize_log {
             Ok(event) => {
-                vault_data.push(Vault{
+                let init_event = VaultInitEvent{
                     account_id: inst.accounts[0].to_string(),
-                    event_instruction_id : event.event_id.to_vec(),
                     underlying_mint: event.underlying_mint.to_vec(),
                     underlying_token_acc: event.underlying_token_acc.to_vec(),
                     underlying_decimals: u32::from(event.underlying_decimals),
-                    total_debt: 0,
-                    total_shares: 0,
-                    minimum_total_idle: 0,
-                    total_idle: 0,
                     deposit_limit: event.deposit_limit,
                     min_user_deposit: event.min_user_deposit,
-                    is_shutdown: false
-                }); 
+                };
+                vault_event.event = Some(vault_event::Event::Initialize(init_event)); 
             },
             Err(e) => {
                 log::info!("Failed to decode data: {}", e);
             }
-            
-        }                            
+        }  
     }
 
-    Ok(Vaults { vaults: vault_data })
+    Ok(vault_event)
 }
