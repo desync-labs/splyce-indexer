@@ -16,3 +16,8 @@ message VaultEvent {
     VaultInitEvent initialize = 1;
   }
 }
+
+//Raw logs from the vault program
+message VaultEventLogs {
+  repeated bytes logs = 1;
+}

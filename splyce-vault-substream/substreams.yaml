@@ -84,7 +84,18 @@ modules:
       `map_vault_events_from_instructions` allows you to get event vault data.
 
 
+  - name: filtered_event_logs
+    kind: map
+    inputs:
+      # - params: string
+      - map: filtered_transactions_without_votes
+    output:
+      type: proto:vault.events.v1.VaultEventLogs
+    doc: |
+      `filtered_event_logs` allows you to get instructions executed by a certain `program_id`, and returns the raw Instruction data model.
+
+
 params: # Default parameters for the filter modules. You can override these parameters based on your needs.
   filtered_transactions_without_votes: "program:CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"
   filtered_instructions_without_votes: "program:CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"
-#
+  # filtered_event_logs: "program:CNyqz3mqw6koNmAe7rn2xHGHAS9ftXUNQohwHSiXhJLQ"

@@ -6,3 +6,4 @@ mod instructions;
 mod utils;
 mod vaults;
 mod events;
+mod events_logs;
