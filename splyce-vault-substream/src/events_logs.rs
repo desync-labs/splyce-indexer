@@ -1,16 +1,15 @@
 use std::vec;
-
-use crate::{events::vaults::VaultInitLog, pb::{sol::{instructions::v1::{Instruction, Instructions}, transactions::v1::Transactions}, vault::events::v1::{vault_event, VaultEvent, VaultEventLogs, VaultInitEvent}}};
-use anchor_lang::{AnchorDeserialize, AnchorSerialize};
 use substreams::log;
-use substreams_solana::pb::sf::solana::r#type::v1::Block;
+use std::error::Error;
 
+use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, VaultEvent, VaultEventLogs, VaultInitEvent}}};
 use crate::utils::utils::read_descriptor;
 
 #[substreams::handlers::map]
 fn filtered_event_logs(
     txns: Transactions,
 ) -> Result<VaultEventLogs, substreams::errors::Error> {
+
     let mut program_event_logs1: Vec<Vec<u8>> = vec![vec![]];
     // Filter and collect event logs
     for trx in txns.transactions {
@@ -54,39 +53,41 @@ fn map_vault_events_from_logs(logs: VaultEventLogs) -> Result<VaultEvent, substr
     for log in logs.logs.iter() {
         
         if log.len() < 8 {
-            log::info!("Invalid log data");
+            //log::info!("Invalid log data");
             continue;
-            
         }
 
-        let mut slice: &[u8] = &log[..];
-        let disc: [u8; 8] = {
-            let mut disc = [0; 8];
-            disc.copy_from_slice(&log[..8]);
-            slice = &slice[8..];
-            disc
-        };
+        vault_event = decode_and_parse(log);
+    }
 
-        //TODO: put a switch case or some generic approach here.
-        let deserialize_log: Result<VaultInitLog, std::io::Error> = AnchorDeserialize::deserialize(&mut slice);
-        
-        match deserialize_log {
-            Ok(event) => {
-                let init_event = VaultInitEvent{
-                    // account_id: inst.accounts[0].to_string(),
-                    underlying_mint: event.underlying_mint.to_vec(),
-                    underlying_token_acc: event.underlying_token_acc.to_vec(),
-                    underlying_decimals: u32::from(event.underlying_decimals),
-                    deposit_limit: event.deposit_limit,
-                    min_user_deposit: event.min_user_deposit,
-                };
-                vault_event.event = Some(vault_event::Event::Initialize(init_event)); 
+    Ok(vault_event)
+}
+
+fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
+    let mut vault_event:VaultEvent = VaultEvent::default();
+    
+    let mut slice: &[u8] = &log[..];
+    let disc: [u8; 8] = {
+        let mut disc = [0; 8];
+        disc.copy_from_slice(&log[..8]);
+        slice = &slice[8..];
+        disc
+    };
+
+   if VaultInitEvent::descriptor() == disc{
+        match decode_and_parse_to_protobuf::<VaultInitEvent>(&mut slice) {
+            Ok(parsed_event) => {
+                vault_event.event = Some(vault_event::Event::Initialize(parsed_event))
             },
             Err(e) => {
                 log::info!("Failed to decode data: {}", e);
             }
-        }  
+        }
     }
 
-    Ok(vault_event)
+    vault_event
+}
+
+fn decode_and_parse_to_protobuf<T: DecodeVaultData>(data: &mut &[u8]) -> Result<T, Box<dyn Error>> {
+    T::parse_from_data(data)
 }
