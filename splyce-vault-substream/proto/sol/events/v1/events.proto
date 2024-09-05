@@ -3,12 +3,11 @@ syntax = "proto3";
 package vault.events.v1;
 
 message VaultInitEvent {
-  string account_id = 1;
-  bytes underlying_mint = 2;
-  bytes underlying_token_acc = 3;
-  uint32 underlying_decimals = 4;
-  uint64 deposit_limit = 5;
-  uint64 min_user_deposit = 6;
+  bytes underlying_mint = 1;
+  bytes underlying_token_acc = 2;
+  uint32 underlying_decimals = 3;
+  uint64 deposit_limit = 4;
+  uint64 min_user_deposit = 5;
 }
 
 message VaultEvent {

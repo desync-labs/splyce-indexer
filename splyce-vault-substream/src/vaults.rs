@@ -27,7 +27,6 @@ fn map_vault_events_from_instructions(insts: Instructions) -> Result<VaultEvent,
         match deserialize_log {
             Ok(event) => {
                 let init_event = VaultInitEvent{
-                    account_id: inst.accounts[0].to_string(),
                     underlying_mint: event.underlying_mint.to_vec(),
                     underlying_token_acc: event.underlying_token_acc.to_vec(),
                     underlying_decimals: u32::from(event.underlying_decimals),

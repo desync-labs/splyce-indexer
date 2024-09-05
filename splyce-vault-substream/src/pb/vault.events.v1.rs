@@ -2,17 +2,15 @@
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultInitEvent {
-    #[prost(string, tag="1")]
-    pub account_id: ::prost::alloc::string::String,
-    #[prost(bytes="vec", tag="2")]
+    #[prost(bytes="vec", tag="1")]
     pub underlying_mint: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes="vec", tag="3")]
+    #[prost(bytes="vec", tag="2")]
     pub underlying_token_acc: ::prost::alloc::vec::Vec<u8>,
-    #[prost(uint32, tag="4")]
+    #[prost(uint32, tag="3")]
     pub underlying_decimals: u32,
-    #[prost(uint64, tag="5")]
+    #[prost(uint64, tag="4")]
     pub deposit_limit: u64,
-    #[prost(uint64, tag="6")]
+    #[prost(uint64, tag="5")]
     pub min_user_deposit: u64,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
