@@ -27,7 +27,8 @@ fn map_vault_events_from_instructions(insts: Instructions) -> Result<Vaults, sub
         match deserialize_result {
             Ok(event) => {
                 vault_data.push(Vault{
-                    event_id : event.event_id.to_vec(),
+                    account_id: inst.accounts[0].to_string(),
+                    event_instruction_id : event.event_id.to_vec(),
                     underlying_mint: event.underlying_mint.to_vec(),
                     underlying_token_acc: event.underlying_token_acc.to_vec(),
                     underlying_decimals: u32::from(event.underlying_decimals),

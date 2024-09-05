@@ -3,17 +3,18 @@ syntax = "proto3";
 package vault.events.v1;
 
 message Vault {
-  bytes event_id = 1;
-  bytes underlying_mint = 2;
-  bytes underlying_token_acc = 3;
-  uint32 underlying_decimals = 4;
-  uint64 total_debt = 5;
-  uint64 total_shares = 6;
-  uint64 minimum_total_idle = 7;
-  uint64 total_idle = 8;
-  uint64 deposit_limit = 9;
-  uint64 min_user_deposit = 10;
-  bool is_shutdown = 11;
+  string account_id = 1;
+  bytes event_instruction_id = 2;
+  bytes underlying_mint = 3;
+  bytes underlying_token_acc = 4;
+  uint32 underlying_decimals = 5;
+  uint64 total_debt = 6;
+  uint64 total_shares = 7;
+  uint64 minimum_total_idle = 8;
+  uint64 total_idle = 9;
+  uint64 deposit_limit = 10;
+  uint64 min_user_deposit = 11;
+  bool is_shutdown = 12;
 }
 
 message Vaults {
