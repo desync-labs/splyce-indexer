@@ -1,7 +1,7 @@
 use anchor_lang::AnchorDeserialize;
-use crate::pb::vault::events::v1::{VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent, VaultWithdrawlEvent};
+use crate::pb::vault::events::v1::{VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent};
 use std::error::Error;
-use super::vaults::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultWithdrawlLog};
+use super::vaults::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog};
 use substreams::log;
 
 pub trait DecodeVaultData: Sized {
@@ -102,6 +102,27 @@ impl DecodeVaultData for VaultWithdrawlEvent {
         };
     
         Ok(withdraw_event)
+    }
+
+}
+
+impl DecodeVaultData for VaultUpdateDepositLimitEvent {
+
+    fn descriptor() -> [u8; 8] {
+        [19, 98, 248, 35, 149, 145, 56, 26]
+    }
+
+    fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
+        
+        let event: VaultUpdateDepositLimitLog = AnchorDeserialize::deserialize(data)
+                        .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
+    
+        let update_limit_event: VaultUpdateDepositLimitEvent = VaultUpdateDepositLimitEvent{
+            vault_index: event.vault_index.to_vec(),
+            new_limit: event.new_limit,
+        };
+    
+        Ok(update_limit_event)
     }
 
 }

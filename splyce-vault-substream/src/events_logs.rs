@@ -2,7 +2,7 @@ use std::vec;
 use substreams::log;
 use std::error::Error;
 
-use crate::{events::{decode_data::DecodeVaultData, vaults::VaultInitLog}, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, VaultAddStrtegyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultWithdrawlEvent}}};
+use crate::{events::{decode_data::DecodeVaultData, vaults::VaultInitLog}, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, VaultAddStrtegyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}}};
 use crate::utils::utils::read_descriptor;
 
 #[substreams::handlers::map]
@@ -108,6 +108,15 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
             },
             Err(e) => {
                 log::info!("Failed to decode vault withdrawl event data: {}", e);
+            }
+        }
+    }else if VaultUpdateDepositLimitEvent::descriptor() == disc{
+        match decode_and_parse_to_protobuf::<VaultUpdateDepositLimitEvent>(&mut slice) {
+            Ok(parsed_event) => {
+                vault_event.event = Some(vault_event::Event::UpdateDepositLimit(parsed_event))
+            },
+            Err(e) => {
+                log::info!("Failed to decode vault update limit event data: {}", e);
             }
         }
     }

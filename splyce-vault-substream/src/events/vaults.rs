@@ -36,3 +36,9 @@ pub struct VaultWithdrawlLog {
     pub assets_to_transfer: u64,
     pub shares_to_burn: u64,
 }
+
+#[derive(Debug, AnchorDeserialize, AnchorSerialize)]
+pub struct VaultUpdateDepositLimitLog {
+    pub vault_index: [u8; 8],
+    pub new_limit: u64,
+}

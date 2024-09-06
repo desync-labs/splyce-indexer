@@ -26,6 +26,13 @@ message VaultDepositEvent {
   uint64 share = 3;
 }
 
+
+message VaultUpdateDepositLimitEvent {
+  bytes vault_index = 1;
+  uint64 new_limit = 2;
+}
+
+
 message VaultWithdrawlEvent {
   bytes vault_index = 1;
   uint64 total_idle = 2;
@@ -40,6 +47,7 @@ message VaultEvent {
     VaultAddStrtegyEvent strategyAdd = 2;
     VaultDepositEvent vaultDeposit = 3;
     VaultWithdrawlEvent withdrwal = 4;
+    VaultUpdateDepositLimitEvent updateDepositLimit = 5;
   }
 }
 
