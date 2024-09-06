@@ -34,7 +34,7 @@ fn map_vault_events_from_instructions(insts: Instructions) -> Result<VaultEvent,
                     deposit_limit: event.deposit_limit,
                     min_user_deposit: event.min_user_deposit,
                 };
-                vault_event.event = Some(vault_event::Event::Initialize(init_event)); 
+                vault_event.event = Some(vault_event::Event::VaultInitialize(init_event)); 
             },
             Err(e) => {
                 log::info!("Failed to decode data: {}", e);

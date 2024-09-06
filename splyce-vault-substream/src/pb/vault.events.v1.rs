@@ -121,7 +121,7 @@ pub mod vault_event {
 #[derive(Clone, PartialEq, ::prost::Oneof)]
     pub enum Event {
         #[prost(message, tag="1")]
-        Initialize(super::VaultInitEvent),
+        VaultInitialize(super::VaultInitEvent),
         #[prost(message, tag="2")]
         StrategyAdd(super::VaultAddStrtegyEvent),
         #[prost(message, tag="3")]

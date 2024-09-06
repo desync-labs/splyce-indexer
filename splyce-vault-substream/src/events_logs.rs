@@ -77,7 +77,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
    if VaultInitEvent::descriptor() == disc{
         match decode_and_parse_to_protobuf::<VaultInitEvent>(&mut slice) {
             Ok(parsed_event) => {
-                vault_event.event = Some(vault_event::Event::Initialize(parsed_event))
+                vault_event.event = Some(vault_event::Event::VaultInitialize(parsed_event))
             },
             Err(e) => {
                 log::info!("Failed to decode vault init data: {}", e);
