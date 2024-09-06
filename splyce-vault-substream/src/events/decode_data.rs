@@ -1,7 +1,7 @@
 use anchor_lang::AnchorDeserialize;
-use crate::pb::vault::events::v1::{VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent};
+use crate::pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent};
 use std::error::Error;
-use super::vaults::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog};
+use super::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog}, vaults::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog}};
 use substreams::log;
 
 pub trait DecodeVaultData: Sized {
@@ -33,7 +33,6 @@ impl DecodeVaultData for VaultInitEvent {
     }
 
 }
-
 
 impl DecodeVaultData for VaultAddStrtegyEvent {
 
@@ -125,4 +124,78 @@ impl DecodeVaultData for VaultUpdateDepositLimitEvent {
         Ok(update_limit_event)
     }
 
+}
+
+
+impl DecodeVaultData for StrategyInitEvent {
+
+    fn descriptor() -> [u8; 8] {
+        [33, 61, 4, 77, 20, 107, 154, 62]
+    }
+
+    fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
+        
+        let event: StrategyInitLog = AnchorDeserialize::deserialize(data)
+                        .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
+    
+        let init_event: StrategyInitEvent = StrategyInitEvent{
+            account_key: event.account_key.to_vec(),
+            strategy_type: event.strategy_type,
+            vault : event.vault.to_vec(),
+            underlying_mint: event.underlying_mint.to_vec(),
+            underlying_token_acc: event.underlying_token_acc.to_vec(),
+            underlying_decimals: u32::from(event.undelying_decimals),
+            total_idle: event.total_idle,
+            total_funds: event.total_funds,
+            deposit_limit: event.deposit_limit,
+            deposit_period_ends: event.deposit_period_ends,
+            lock_period_ends: event.lock_period_ends,
+        };
+    
+        Ok(init_event)
+    }
+
+}
+
+impl DecodeVaultData for StrategyDepositEvent {
+
+    fn descriptor() -> [u8; 8] {
+        [44, 150, 97, 77, 190, 106, 76, 237]
+    }
+
+    fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
+        
+        let event: StrategyDepositLog = AnchorDeserialize::deserialize(data)
+                        .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
+    
+        let deposit_event: StrategyDepositEvent = StrategyDepositEvent { 
+            account_key: event.account_key.to_vec(), 
+            amount: event.amount, 
+            total_funds: event.total_funds 
+        };
+    
+        Ok(deposit_event)
+    }
+
+}
+
+impl DecodeVaultData for StrategyWithdrawEvent {
+
+    fn descriptor() -> [u8; 8] {
+        [120, 188, 132, 45, 215, 160, 115, 81]
+    }
+
+    fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
+        
+        let event: StrategyWithdrawLog = AnchorDeserialize::deserialize(data)
+                        .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
+    
+        let withdraw_event: StrategyWithdrawEvent = StrategyWithdrawEvent { 
+            account_key: event.account_key.to_vec(), 
+            amount: event.amount, 
+            total_funds: event.total_funds 
+        };
+    
+        Ok(withdraw_event)
+    }
 }

@@ -2,7 +2,7 @@ use std::vec;
 use substreams::log;
 use std::error::Error;
 
-use crate::{events::{decode_data::DecodeVaultData, vaults::VaultInitLog}, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, VaultAddStrtegyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}}};
+use crate::{events::{decode_data::DecodeVaultData, vaults::VaultInitLog}, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}}};
 use crate::utils::utils::read_descriptor;
 
 #[substreams::handlers::map]
@@ -117,6 +117,33 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
             },
             Err(e) => {
                 log::info!("Failed to decode vault update limit event data: {}", e);
+            }
+        }
+    }else if StrategyInitEvent::descriptor() == disc{
+        match decode_and_parse_to_protobuf::<StrategyInitEvent>(&mut slice) {
+            Ok(parsed_event) => {
+                vault_event.event = Some(vault_event::Event::StrategyInitialize(parsed_event))
+            },
+            Err(e) => {
+                log::info!("Failed to decode vault strategy init event data: {}", e);
+            }
+        }
+    }else if StrategyDepositEvent::descriptor() == disc{
+        match decode_and_parse_to_protobuf::<StrategyDepositEvent>(&mut slice) {
+            Ok(parsed_event) => {
+                vault_event.event = Some(vault_event::Event::StrategyDeposit(parsed_event))
+            },
+            Err(e) => {
+                log::info!("Failed to decode vault strategy deposit event data: {}", e);
+            }
+        }
+    }else if StrategyWithdrawEvent::descriptor() == disc{
+        match decode_and_parse_to_protobuf::<StrategyWithdrawEvent>(&mut slice) {
+            Ok(parsed_event) => {
+                vault_event.event = Some(vault_event::Event::StrategyWithdraw(parsed_event))
+            },
+            Err(e) => {
+                log::info!("Failed to decode vault strategy withdraw event data: {}", e);
             }
         }
     }

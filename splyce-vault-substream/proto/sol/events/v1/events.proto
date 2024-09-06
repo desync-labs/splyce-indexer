@@ -11,6 +11,20 @@ message VaultInitEvent {
   uint64 min_user_deposit = 6;
 }
 
+message StrategyInitEvent {
+  bytes account_key = 1;
+  string strategy_type = 2;
+  bytes  vault = 3;
+  bytes underlying_mint = 4;
+  bytes underlying_token_acc = 5;
+  uint32 underlying_decimals = 6;
+  uint64 total_idle = 7;
+  uint64 total_funds = 8;
+  uint64 deposit_limit = 9;
+  uint64 deposit_period_ends = 10;
+  uint64 lock_period_ends = 11;
+}
+
 message VaultAddStrtegyEvent {
   bytes vault_index = 1;
   bytes strategy_key = 2;
@@ -41,6 +55,19 @@ message VaultWithdrawlEvent {
   uint64 shares_to_burn = 5;
 }
 
+
+message StrategyDepositEvent {
+  bytes account_key = 1;
+  uint64 amount = 2;
+  uint64 total_funds = 3;
+}
+
+message StrategyWithdrawEvent {
+  bytes account_key = 1;
+  uint64 amount = 2;
+  uint64 total_funds = 3;
+}
+
 message VaultEvent {
   oneof event {
     VaultInitEvent initialize = 1;
@@ -48,6 +75,9 @@ message VaultEvent {
     VaultDepositEvent vaultDeposit = 3;
     VaultWithdrawlEvent withdrwal = 4;
     VaultUpdateDepositLimitEvent updateDepositLimit = 5;
+    StrategyInitEvent strategyInitialize = 6;
+    StrategyDepositEvent strategyDeposit = 7;
+    StrategyWithdrawEvent strategyWithdraw = 8;
   }
 }
 

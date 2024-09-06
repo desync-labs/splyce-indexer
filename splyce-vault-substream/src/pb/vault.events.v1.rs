@@ -17,6 +17,32 @@ pub struct VaultInitEvent {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StrategyInitEvent {
+    #[prost(bytes="vec", tag="1")]
+    pub account_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="2")]
+    pub strategy_type: ::prost::alloc::string::String,
+    #[prost(bytes="vec", tag="3")]
+    pub vault: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes="vec", tag="4")]
+    pub underlying_mint: ::prost::alloc::vec::Vec<u8>,
+    #[prost(bytes="vec", tag="5")]
+    pub underlying_token_acc: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint32, tag="6")]
+    pub underlying_decimals: u32,
+    #[prost(uint64, tag="7")]
+    pub total_idle: u64,
+    #[prost(uint64, tag="8")]
+    pub total_funds: u64,
+    #[prost(uint64, tag="9")]
+    pub deposit_limit: u64,
+    #[prost(uint64, tag="10")]
+    pub deposit_period_ends: u64,
+    #[prost(uint64, tag="11")]
+    pub lock_period_ends: u64,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultAddStrtegyEvent {
     #[prost(bytes="vec", tag="1")]
     pub vault_index: ::prost::alloc::vec::Vec<u8>,
@@ -65,8 +91,28 @@ pub struct VaultWithdrawlEvent {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StrategyDepositEvent {
+    #[prost(bytes="vec", tag="1")]
+    pub account_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag="2")]
+    pub amount: u64,
+    #[prost(uint64, tag="3")]
+    pub total_funds: u64,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StrategyWithdrawEvent {
+    #[prost(bytes="vec", tag="1")]
+    pub account_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag="2")]
+    pub amount: u64,
+    #[prost(uint64, tag="3")]
+    pub total_funds: u64,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultEvent {
-    #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4, 5")]
+    #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4, 5, 6, 7, 8")]
     pub event: ::core::option::Option<vault_event::Event>,
 }
 /// Nested message and enum types in `VaultEvent`.
@@ -84,6 +130,12 @@ pub mod vault_event {
         Withdrwal(super::VaultWithdrawlEvent),
         #[prost(message, tag="5")]
         UpdateDepositLimit(super::VaultUpdateDepositLimitEvent),
+        #[prost(message, tag="6")]
+        StrategyInitialize(super::StrategyInitEvent),
+        #[prost(message, tag="7")]
+        StrategyDeposit(super::StrategyDepositEvent),
+        #[prost(message, tag="8")]
+        StrategyWithdraw(super::StrategyWithdrawEvent),
     }
 }
 /// Raw logs from the vault program
