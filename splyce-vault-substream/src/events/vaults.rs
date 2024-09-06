@@ -13,3 +13,12 @@ pub struct VaultInitLog {
     pub deposit_limit: u64,
     pub min_user_deposit: u64,
 }
+
+#[derive(Debug, AnchorDeserialize, AnchorSerialize)]
+pub struct VaultAddStrategyLog {
+    pub strategy_key: [u8 ; 32],
+    pub current_debt: u64,
+    pub max_debt: u64,
+    pub last_update: u64,
+    pub is_active: bool,    
+}

@@ -10,9 +10,18 @@ message VaultInitEvent {
   uint64 min_user_deposit = 5;
 }
 
+message VaultAddStrtegyEvent {
+  bytes strategy_key = 1;
+  uint64 current_debt = 2;
+  uint64 max_debt = 3;
+  uint64 last_update = 4;
+  bool is_active = 5;
+}
+
 message VaultEvent {
   oneof event {
     VaultInitEvent initialize = 1;
+    VaultAddStrtegyEvent strategyAdd = 2;
   }
 }
 

@@ -2,7 +2,7 @@ use std::vec;
 use substreams::log;
 use std::error::Error;
 
-use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, VaultEvent, VaultEventLogs, VaultInitEvent}}};
+use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, VaultAddStrtegyEvent, VaultEvent, VaultEventLogs, VaultInitEvent}}};
 use crate::utils::utils::read_descriptor;
 
 #[substreams::handlers::map]
@@ -53,7 +53,7 @@ fn map_vault_events_from_logs(logs: VaultEventLogs) -> Result<VaultEvent, substr
     for log in logs.logs.iter() {
         
         if log.len() < 8 {
-            //log::info!("Invalid log data");
+            log::info!("Invalid log data");
             continue;
         }
 
@@ -74,13 +74,24 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
         disc
     };
 
+    log::info!("<<Instruction disriminator>> : {:?}", disc);
+
    if VaultInitEvent::descriptor() == disc{
         match decode_and_parse_to_protobuf::<VaultInitEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::Initialize(parsed_event))
             },
             Err(e) => {
-                log::info!("Failed to decode data: {}", e);
+                log::info!("Failed to decode vault init data: {}", e);
+            }
+        }
+    }else if VaultAddStrtegyEvent::descriptor() == disc{
+        match decode_and_parse_to_protobuf::<VaultAddStrtegyEvent>(&mut slice) {
+            Ok(parsed_event) => {
+                vault_event.event = Some(vault_event::Event::StrategyAdd(parsed_event))
+            },
+            Err(e) => {
+                log::info!("Failed to decode vault strategy add data: {}", e);
             }
         }
     }

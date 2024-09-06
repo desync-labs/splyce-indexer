@@ -15,8 +15,22 @@ pub struct VaultInitEvent {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VaultAddStrtegyEvent {
+    #[prost(bytes="vec", tag="1")]
+    pub strategy_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag="2")]
+    pub current_debt: u64,
+    #[prost(uint64, tag="3")]
+    pub max_debt: u64,
+    #[prost(uint64, tag="4")]
+    pub last_update: u64,
+    #[prost(bool, tag="5")]
+    pub is_active: bool,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultEvent {
-    #[prost(oneof="vault_event::Event", tags="1")]
+    #[prost(oneof="vault_event::Event", tags="1, 2")]
     pub event: ::core::option::Option<vault_event::Event>,
 }
 /// Nested message and enum types in `VaultEvent`.
@@ -26,6 +40,8 @@ pub mod vault_event {
     pub enum Event {
         #[prost(message, tag="1")]
         Initialize(super::VaultInitEvent),
+        #[prost(message, tag="2")]
+        StrategyAdd(super::VaultAddStrtegyEvent),
     }
 }
 /// Raw logs from the vault program
