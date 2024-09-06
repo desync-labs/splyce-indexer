@@ -1,8 +1,7 @@
 use anchor_lang::AnchorDeserialize;
-use crate::pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent};
+use crate::{event_logs_structs::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog}, vault_logs::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog}}, pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}};
+
 use std::error::Error;
-use super::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog}, vaults::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog}};
-use substreams::log;
 
 pub trait DecodeVaultData: Sized {
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>>;

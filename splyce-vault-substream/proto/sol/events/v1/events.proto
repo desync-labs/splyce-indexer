@@ -2,6 +2,9 @@ syntax = "proto3";
 
 package vault.events.v1;
 
+//TODO: Create seperate proto files for vault and strategy events 
+//Priority: Nice to have
+
 message VaultInitEvent {
   bytes vault_index = 1;
   bytes underlying_mint = 2;
