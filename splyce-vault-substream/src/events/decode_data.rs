@@ -1,7 +1,7 @@
 use anchor_lang::AnchorDeserialize;
-use crate::pb::vault::events::v1::{VaultAddStrtegyEvent, VaultInitEvent};
+use crate::pb::vault::events::v1::{VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent};
 use std::error::Error;
-use super::vaults::{VaultAddStrategyLog, VaultInitLog};
+use super::vaults::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog};
 use substreams::log;
 
 pub trait DecodeVaultData: Sized {
@@ -21,6 +21,7 @@ impl DecodeVaultData for VaultInitEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let init_event: VaultInitEvent = VaultInitEvent{
+            vault_index: event.vault_index.to_vec(),
             underlying_mint: event.underlying_mint.to_vec(),
             underlying_token_acc: event.underlying_token_acc.to_vec(),
             underlying_decimals: u32::from(event.underlying_decimals),
@@ -46,6 +47,7 @@ impl DecodeVaultData for VaultAddStrtegyEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let strategy_add_event: VaultAddStrtegyEvent = VaultAddStrtegyEvent{
+            vault_index: event.vault_index.to_vec(),
             strategy_key: event.strategy_key.to_vec(),
             current_debt: event.current_debt,
             max_debt: event.max_debt,
@@ -54,6 +56,28 @@ impl DecodeVaultData for VaultAddStrtegyEvent {
         };
     
         Ok(strategy_add_event)
+    }
+
+}
+
+impl DecodeVaultData for VaultDepositEvent {
+
+    fn descriptor() -> [u8; 8] {
+        [187, 186, 196, 189, 175, 44, 10, 64]
+    }
+
+    fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
+        
+        let event: VaultDepositLog = AnchorDeserialize::deserialize(data)
+                        .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
+    
+        let deposit_event: VaultDepositEvent = VaultDepositEvent{
+            vault_index: event.vault_index.to_vec(),
+            amount: event.amount,
+            share: event.share,
+        };
+    
+        Ok(deposit_event)
     }
 
 }

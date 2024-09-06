@@ -3,25 +3,34 @@ syntax = "proto3";
 package vault.events.v1;
 
 message VaultInitEvent {
-  bytes underlying_mint = 1;
-  bytes underlying_token_acc = 2;
-  uint32 underlying_decimals = 3;
-  uint64 deposit_limit = 4;
-  uint64 min_user_deposit = 5;
+  bytes vault_index = 1;
+  bytes underlying_mint = 2;
+  bytes underlying_token_acc = 3;
+  uint32 underlying_decimals = 4;
+  uint64 deposit_limit = 5;
+  uint64 min_user_deposit = 6;
 }
 
 message VaultAddStrtegyEvent {
-  bytes strategy_key = 1;
-  uint64 current_debt = 2;
-  uint64 max_debt = 3;
-  uint64 last_update = 4;
-  bool is_active = 5;
+  bytes vault_index = 1;
+  bytes strategy_key = 2;
+  uint64 current_debt = 3;
+  uint64 max_debt = 4;
+  uint64 last_update = 5;
+  bool is_active = 6;
+}
+
+message VaultDepositEvent {
+  bytes vault_index = 1;
+  uint64 amount = 2;
+  uint64 share = 3;
 }
 
 message VaultEvent {
   oneof event {
     VaultInitEvent initialize = 1;
     VaultAddStrtegyEvent strategyAdd = 2;
+    VaultDepositEvent vaultDeposit = 3;
   }
 }
 
