@@ -26,11 +26,20 @@ message VaultDepositEvent {
   uint64 share = 3;
 }
 
+message VaultWithdrawlEvent {
+  bytes vault_index = 1;
+  uint64 total_idle = 2;
+  uint64 total_share = 3;
+  uint64 assets_to_transfer = 4;
+  uint64 shares_to_burn = 5;
+}
+
 message VaultEvent {
   oneof event {
     VaultInitEvent initialize = 1;
     VaultAddStrtegyEvent strategyAdd = 2;
     VaultDepositEvent vaultDeposit = 3;
+    VaultWithdrawlEvent withdrwal = 4;
   }
 }
 

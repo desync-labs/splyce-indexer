@@ -43,8 +43,22 @@ pub struct VaultDepositEvent {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VaultWithdrawlEvent {
+    #[prost(bytes="vec", tag="1")]
+    pub vault_index: ::prost::alloc::vec::Vec<u8>,
+    #[prost(uint64, tag="2")]
+    pub total_idle: u64,
+    #[prost(uint64, tag="3")]
+    pub total_share: u64,
+    #[prost(uint64, tag="4")]
+    pub assets_to_transfer: u64,
+    #[prost(uint64, tag="5")]
+    pub shares_to_burn: u64,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultEvent {
-    #[prost(oneof="vault_event::Event", tags="1, 2, 3")]
+    #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4")]
     pub event: ::core::option::Option<vault_event::Event>,
 }
 /// Nested message and enum types in `VaultEvent`.
@@ -58,6 +72,8 @@ pub mod vault_event {
         StrategyAdd(super::VaultAddStrtegyEvent),
         #[prost(message, tag="3")]
         VaultDeposit(super::VaultDepositEvent),
+        #[prost(message, tag="4")]
+        Withdrwal(super::VaultWithdrawlEvent),
     }
 }
 /// Raw logs from the vault program

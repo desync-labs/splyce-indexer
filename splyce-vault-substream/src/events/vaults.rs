@@ -1,8 +1,4 @@
-use std::vec;
-use std::error::Error;
 use anchor_lang::prelude::*;
-use crate::pb::vault::events::v1::VaultInitEvent;
-
 
 
 #[derive(Debug, AnchorDeserialize, AnchorSerialize)]
@@ -30,4 +26,13 @@ pub struct VaultDepositLog {
     pub vault_index: [u8; 8],
     pub amount: u64,
     pub share: u64,
+}
+
+#[derive(Debug, AnchorDeserialize, AnchorSerialize)]
+pub struct VaultWithdrawlLog {
+    pub vault_index: [u8; 8],
+    pub total_idle: u64,
+    pub total_share: u64,
+    pub assets_to_transfer: u64,
+    pub shares_to_burn: u64,
 }
