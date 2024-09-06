@@ -9,6 +9,8 @@ pub trait DecodeVaultData: Sized {
     fn descriptor() -> [u8; 8];
 }
 
+//TODO: Explore option how to remove this hardcoded descriptor
+
 impl DecodeVaultData for VaultInitEvent {
 
     fn descriptor() -> [u8; 8] {
