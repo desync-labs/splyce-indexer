@@ -11,9 +11,8 @@
     "test": "graph test"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "^0.69.0",
-    "@graphprotocol/graph-ts": "^0.34.0",
-    "@types/node": "^16.11.9",
+    "@graphprotocol/graph-cli": "^0.81.0",
+    "@graphprotocol/graph-ts": "^0.35.1",
     "@typescript-eslint/eslint-plugin": "^2.0.0",
     "@typescript-eslint/parser": "^2.0.0",
     "as-proto": "^1.3.0",

@@ -1,5 +1,27 @@
-type JournalEntity @entity {
+type Token @entity {
+  "Token mint account"
   id: ID!
-  title: String!
-  message: String!
+  "Number of decimals for this Token"
+  decimals: Int!
+  "Name of the Token"
+  name: String!
+  "Symbol of the Token"
+  symbol: String!
+}
+
+type Vault @entity {
+  "Vault address"
+  id: ID!
+  "Token this Vault will accrue"
+  token: Token!
+  "The maximum amount of tokens that can be deposited in this Vault"
+  depositLimit: BigInt!
+  "Is vault in shutdown"
+  shutdown: Boolean!
+  "Total amount of assets that has been deposited in strategies."
+  totalDebt: BigInt!
+  "Current assets held in the vault contract. Replacing balanceOf(this) to avoid price_per_share manipulation."
+  totalIdle: BigInt!
+  "Annual Percentage Rate."
+  apr: BigDecimal!
 }

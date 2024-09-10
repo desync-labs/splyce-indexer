@@ -1,7 +1,7 @@
 specVersion: v0.1.0
 package:
-  name: "solana_common"
-  version: v0.2.0
+  name: "splyce_vault_explorer"
+  version: v1.0.0
   image: ./solana.png
   doc: |
     Common Solana modules that allow you to consume transactions and instructions, and apply filters to efficiently retrieve the data that you need.
