@@ -1,0 +1,5 @@
+type JournalEntity @entity {
+  id: ID!
+  title: String!
+  message: String!
+}
