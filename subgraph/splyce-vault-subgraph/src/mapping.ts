@@ -10,20 +10,7 @@ export function handleTransactions(bytes: Uint8Array): void {
 
     if (vaultEvent.vaultInitialize !== null) {
         log.info("Initializing vault: {0}", [vaultEvent.vaultInitialize!.vaultIndex.join("")]);
-
-        let vault = new Vault(vaultEvent.vaultInitialize!.vaultIndex.join(""));
-        vault.depositLimit = BigInt.fromU64(vaultEvent.vaultInitialize!.depositLimit);
-        vault.shutdown = false;
-        vault.totalDebt =    BigInt.fromI32(0);
-        vault.totalIdle = BigInt.fromI32(0);
-        vault.totalShare = BigInt.fromI32(0);
-        vault.apr  =   BigDecimal.fromString("0");
-        vault.strategyIds = [];
-        
-        //Create token entity
-        vault.token  =  getOrCreateTokenEntity(vaultEvent.vaultInitialize!).id;
-
-        vault.save();
+        getOrCreateVaultEntity(vaultEvent.vaultInitialize)
     }else if(vaultEvent.strategyInitialize != null){
         log.info("Initializing strategy: {0}", [vaultEvent.strategyInitialize!.accountKey.join("")]);
         getOrCreateStrategyEntity(vaultEvent.strategyInitialize!);
@@ -78,6 +65,26 @@ export function handleTransactions(bytes: Uint8Array): void {
     }    
 }
 
+function getOrCreateVaultEntity(vaultInitEvent: VaultInitEvent): Vault {
+    let vault = Vault.load(vaultInitEvent!.vaultIndex.join(""));
+    if (vault == null) {
+        vault = new Vault(vaultInitEvent!.vaultIndex.join(""));
+        vault.depositLimit = BigInt.fromU64(vaultInitEvent!.depositLimit);
+        vault.shutdown = false;
+        vault.totalDebt =    BigInt.fromI32(0);
+        vault.totalIdle = BigInt.fromI32(0);
+        vault.totalShare = BigInt.fromI32(0);
+        vault.apr  =   BigDecimal.fromString("0");
+        vault.strategyIds = [];
+        
+        //Create token entity
+        vault.token  =  getOrCreateTokenEntity(vaultInitEvent!).id;
+    
+        vault.save();
+    }
+    return vault as Vault;
+}
+
 function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitEvent): Strategy {
     let strategy = Strategy.load(strategyInitializeEvent.accountKey.join(""));
     if (strategy == null) {
@@ -97,7 +104,7 @@ function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitEvent): 
 function getOrCreateTokenEntity(vaultInitEvent: VaultInitEvent): Token {
     let token = Token.load(vaultInitEvent.underlyingMint.join(""));
     if (token == null) {
-        token = new Token(vaultInitEvent.underlyingMint.toString());
+        token = new Token(vaultInitEvent.underlyingMint.join(""));
         token.decimals = vaultInitEvent.underlyingDecimals;
         token.symbol = ""; //TODO: Get symbol from mint
         token.name = "";   //TODO: Get name from mint 
