@@ -22,6 +22,40 @@ type Vault @entity {
   totalDebt: BigInt!
   "Current assets held in the vault contract. Replacing balanceOf(this) to avoid price_per_share manipulation."
   totalIdle: BigInt!
+  "Total Share."
+  totalShare: BigInt!
   "Annual Percentage Rate."
   apr: BigDecimal!
+  # "Strategies for this Vault"
+  # strategies: [Strategy!]! @derivedFrom(field: "vault")
+  "Strategy Ids for this vault"
+  strategyIds: [Strategy!]!
+
+}
+
+enum StrategyType {
+  Simple
+  TradeFinTech
+}
+
+type Strategy @entity {
+  "Strategy address"
+  id: ID!
+  "The Vault"
+  vault: Vault
+  "Strategy type"
+  strategyType: StrategyType!
+  "Token this Strategy will accrue"
+  totalIdle: BigInt!
+  "Total amount of assets that has been deposited in strategies."
+  totalFund: BigInt!
+  "The maximum amount of tokens that can be deposited in this Vault"
+  depositLimit: BigInt!
+  "Deposit period ends"
+  depositPeriodEnds: BigInt!
+  "Lock period ends"
+  lockPeriodEnds: BigInt!
+  # "Vaults that this strategy is active"
+  # activeOnVaults: [Vault!] @derivedFrom(field: "strategies")
+
 }
