@@ -10,7 +10,7 @@ export function handleTransactions(bytes: Uint8Array): void {
 
     if (vaultEvent.vaultInitialize !== null) {
         log.info("Initializing vault: {0}", [vaultEvent.vaultInitialize!.vaultIndex.join("")]);
-        getOrCreateVaultEntity(vaultEvent.vaultInitialize)
+        getOrCreateVaultEntity(vaultEvent.vaultInitialize!)
     }else if(vaultEvent.strategyInitialize != null){
         log.info("Initializing strategy: {0}", [vaultEvent.strategyInitialize!.accountKey.join("")]);
         getOrCreateStrategyEntity(vaultEvent.strategyInitialize!);
@@ -20,9 +20,12 @@ export function handleTransactions(bytes: Uint8Array): void {
         if(vault != null){
            let strategy = Strategy.load(vaultEvent.strategyAdd!.strategyKey.join("")); 
            if(strategy != null){
+                log.info("Strategy {0} added to vault {1}",[strategy.id,vault.id]);
+                strategy.vault = vault.id;
+                strategy.save();
                 // vault.strategies.load().push(strategy);
-                vault.strategyIds.push(strategy.id);
-                vault.save();
+                // vault.strategyIds.push(strategy.id);
+                // vault.save();
            }
         }
     }else if(vaultEvent.vaultDeposit != null){
@@ -66,19 +69,19 @@ export function handleTransactions(bytes: Uint8Array): void {
 }
 
 function getOrCreateVaultEntity(vaultInitEvent: VaultInitEvent): Vault {
-    let vault = Vault.load(vaultInitEvent!.vaultIndex.join(""));
+    let vault = Vault.load(vaultInitEvent.vaultIndex.join(""));
     if (vault == null) {
-        vault = new Vault(vaultInitEvent!.vaultIndex.join(""));
-        vault.depositLimit = BigInt.fromU64(vaultInitEvent!.depositLimit);
+        vault = new Vault(vaultInitEvent.vaultIndex.join(""));
+        vault.depositLimit = BigInt.fromU64(vaultInitEvent.depositLimit);
         vault.shutdown = false;
         vault.totalDebt =    BigInt.fromI32(0);
         vault.totalIdle = BigInt.fromI32(0);
         vault.totalShare = BigInt.fromI32(0);
         vault.apr  =   BigDecimal.fromString("0");
-        vault.strategyIds = [];
+        // vault.strategyIds = [];
         
         //Create token entity
-        vault.token  =  getOrCreateTokenEntity(vaultInitEvent!).id;
+        vault.token  =  getOrCreateTokenEntity(vaultInitEvent).id;
     
         vault.save();
     }

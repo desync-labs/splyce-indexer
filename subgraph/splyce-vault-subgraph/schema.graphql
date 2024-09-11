@@ -26,10 +26,10 @@ type Vault @entity {
   totalShare: BigInt!
   "Annual Percentage Rate."
   apr: BigDecimal!
-  # "Strategies for this Vault"
-  # strategies: [Strategy!]! @derivedFrom(field: "vault")
-  "Strategy Ids for this vault"
-  strategyIds: [Strategy!]!
+  "Strategies for this Vault"
+  strategies: [Strategy!]! @derivedFrom(field: "vault")
+  # "Strategy Ids for this vault"
+  # strategyIds: [Strategy!]!
 
 }
 
