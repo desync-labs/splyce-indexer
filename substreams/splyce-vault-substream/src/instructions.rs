@@ -2,7 +2,7 @@ use crate::pb::sol::instructions::v1::{Instruction, Instructions};
 use substreams::log;
 use substreams_solana::pb::sf::solana::r#type::v1::Block;
 
-use crate::utils::utils::read_descriptor;
+use crate::utils::utils::read_descriminator;
 
 
 #[substreams::handlers::map]
@@ -68,7 +68,7 @@ fn filtered_instructions_without_votes(
                         // Obtain the slice
                         let sub_slice: &[u8] = &borsh_bytes[start_index..start_index + length];
 
-                        let discriminator = read_descriptor(&view.data());
+                        let discriminator = read_descriminator(&view.data());
 
                         if sub_slice == discriminator {
                             log::info!("Discriminator matched");
@@ -78,7 +78,7 @@ fn filtered_instructions_without_votes(
                         }
                     });
                     
-                    log::info!("Discriminator = {:?}", read_descriptor(&view.data()));
+                    log::info!("Discriminator = {:?}", read_descriminator(&view.data()));
 
                     Some(Instruction {
                         program_id,

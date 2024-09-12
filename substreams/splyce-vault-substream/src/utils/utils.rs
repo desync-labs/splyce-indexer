@@ -2,7 +2,7 @@
 use super::constants::DISCRIMINATOR_LENGTH;
 use sha2::{Sha256, Digest};
 
-pub fn read_descriptor(data: &[u8]) -> &[u8] {
+pub fn read_descriminator(data: &[u8]) -> &[u8] {
     return &data[0..DISCRIMINATOR_LENGTH];
 }
 

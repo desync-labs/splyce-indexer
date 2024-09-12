@@ -2,7 +2,7 @@ use std::vec;
 use substreams::log;
 use std::error::Error;
 
-use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}}, utils::utils::read_descriptor};
+use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}}, utils::utils::read_descriminator};
 
 #[substreams::handlers::map]
 fn filtered_event_logs(
@@ -24,7 +24,7 @@ fn filtered_event_logs(
                     let remaining_log = log["Program data:".len()..].trim().to_string();
                     let borsh_bytes = base64::decode(&remaining_log).unwrap();
 
-                    let discriminator = read_descriptor(&borsh_bytes);
+                    let discriminator = read_descriminator(&borsh_bytes);
                     log::info!("Event Discriminator = {:?}", discriminator);
 
                     Some(borsh_bytes)
@@ -71,7 +71,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
         disc
     };
 
-   if VaultInitEvent::descriptor() == disc{
+   if VaultInitEvent::descriminator() == disc{
         match decode_and_parse_to_protobuf::<VaultInitEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::VaultInitialize(parsed_event))
@@ -80,7 +80,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode vault init data: {}", e);
             }
         }
-    }else if VaultAddStrtegyEvent::descriptor() == disc{
+    }else if VaultAddStrtegyEvent::descriminator() == disc{
         match decode_and_parse_to_protobuf::<VaultAddStrtegyEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::StrategyAdd(parsed_event))
@@ -89,7 +89,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode vault strategy add data: {}", e);
             }
         }
-    }else if VaultDepositEvent::descriptor() == disc{
+    }else if VaultDepositEvent::descriminator() == disc{
         match decode_and_parse_to_protobuf::<VaultDepositEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::VaultDeposit(parsed_event))
@@ -98,7 +98,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode vault deposit event data: {}", e);
             }
         }
-    }else if VaultWithdrawlEvent::descriptor() == disc{
+    }else if VaultWithdrawlEvent::descriminator() == disc{
         match decode_and_parse_to_protobuf::<VaultWithdrawlEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::Withdrwal(parsed_event))
@@ -107,7 +107,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode vault withdrawl event data: {}", e);
             }
         }
-    }else if VaultUpdateDepositLimitEvent::descriptor() == disc{
+    }else if VaultUpdateDepositLimitEvent::descriminator() == disc{
         match decode_and_parse_to_protobuf::<VaultUpdateDepositLimitEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::UpdateDepositLimit(parsed_event))
@@ -116,7 +116,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode vault update limit event data: {}", e);
             }
         }
-    }else if StrategyInitEvent::descriptor() == disc{
+    }else if StrategyInitEvent::descriminator() == disc{
         match decode_and_parse_to_protobuf::<StrategyInitEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::StrategyInitialize(parsed_event))
@@ -125,7 +125,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode vault strategy init event data: {}", e);
             }
         }
-    }else if StrategyDepositEvent::descriptor() == disc{
+    }else if StrategyDepositEvent::descriminator() == disc{
         match decode_and_parse_to_protobuf::<StrategyDepositEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::StrategyDeposit(parsed_event))
@@ -134,7 +134,7 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode vault strategy deposit event data: {}", e);
             }
         }
-    }else if StrategyWithdrawEvent::descriptor() == disc{
+    }else if StrategyWithdrawEvent::descriminator() == disc{
         match decode_and_parse_to_protobuf::<StrategyWithdrawEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::StrategyWithdraw(parsed_event))

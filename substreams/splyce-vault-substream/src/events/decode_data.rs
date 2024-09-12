@@ -7,12 +7,12 @@ use crate::utils::utils;
 
 pub trait DecodeVaultData: Sized {
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>>;
-    fn descriptor() -> [u8; 8];
+    fn descriminator() -> [u8; 8];
 }
 
 impl DecodeVaultData for VaultInitEvent {
 
-    fn descriptor() -> [u8; 8] {
+    fn descriminator() -> [u8; 8] {
         utils::get_descriminator("VaultInitEvent")
     }
 
@@ -37,7 +37,7 @@ impl DecodeVaultData for VaultInitEvent {
 
 impl DecodeVaultData for VaultAddStrtegyEvent {
 
-    fn descriptor() -> [u8; 8] {
+    fn descriminator() -> [u8; 8] {
         utils::get_descriminator("VaultAddStrtegyEvent")
     }
 
@@ -62,7 +62,7 @@ impl DecodeVaultData for VaultAddStrtegyEvent {
 
 impl DecodeVaultData for VaultDepositEvent {
 
-    fn descriptor() -> [u8; 8] {
+    fn descriminator() -> [u8; 8] {
         utils::get_descriminator("VaultDepositEvent")
     }
 
@@ -84,7 +84,7 @@ impl DecodeVaultData for VaultDepositEvent {
 
 impl DecodeVaultData for VaultWithdrawlEvent {
 
-    fn descriptor() -> [u8; 8] {
+    fn descriminator() -> [u8; 8] {
         utils::get_descriminator("VaultWithdrawlEvent")
     }
 
@@ -108,7 +108,7 @@ impl DecodeVaultData for VaultWithdrawlEvent {
 
 impl DecodeVaultData for VaultUpdateDepositLimitEvent {
 
-    fn descriptor() -> [u8; 8] {
+    fn descriminator() -> [u8; 8] {
         utils::get_descriminator("VaultUpdateDepositLimitEvent")
     }
 
@@ -130,7 +130,7 @@ impl DecodeVaultData for VaultUpdateDepositLimitEvent {
 
 impl DecodeVaultData for StrategyInitEvent {
 
-    fn descriptor() -> [u8; 8] {
+    fn descriminator() -> [u8; 8] {
         utils::get_descriminator("StrategyInitEvent")
     }
 
@@ -158,7 +158,7 @@ impl DecodeVaultData for StrategyInitEvent {
 
 impl DecodeVaultData for StrategyDepositEvent {
 
-    fn descriptor() -> [u8; 8] {
+    fn descriminator() -> [u8; 8] {
         utils::get_descriminator("StrategyDepositEvent")
     }
 
@@ -180,7 +180,7 @@ impl DecodeVaultData for StrategyDepositEvent {
 
 impl DecodeVaultData for StrategyWithdrawEvent {
 
-    fn descriptor() -> [u8; 8] {
+    fn descriminator() -> [u8; 8] {
         utils::get_descriminator("StrategyWithdrawEvent")
     }
 
