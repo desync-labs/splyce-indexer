@@ -146,8 +146,6 @@ impl DecodeVaultData for StrategyInitEvent {
             underlying_mint: event.underlying_mint.to_vec(),
             underlying_token_acc: event.underlying_token_acc.to_vec(),
             underlying_decimals: u32::from(event.undelying_decimals),
-            total_idle: event.total_idle,
-            total_funds: event.total_funds,
             deposit_limit: event.deposit_limit,
             deposit_period_ends: event.deposit_period_ends,
             lock_period_ends: event.lock_period_ends,
@@ -172,7 +170,7 @@ impl DecodeVaultData for StrategyDepositEvent {
         let deposit_event: StrategyDepositEvent = StrategyDepositEvent { 
             account_key: event.account_key.to_vec(), 
             amount: event.amount, 
-            total_funds: event.total_funds 
+            total_assets: event.total_assets 
         };
     
         Ok(deposit_event)
@@ -194,7 +192,7 @@ impl DecodeVaultData for StrategyWithdrawEvent {
         let withdraw_event: StrategyWithdrawEvent = StrategyWithdrawEvent { 
             account_key: event.account_key.to_vec(), 
             amount: event.amount, 
-            total_funds: event.total_funds 
+            total_assets: event.total_assets 
         };
     
         Ok(withdraw_event)

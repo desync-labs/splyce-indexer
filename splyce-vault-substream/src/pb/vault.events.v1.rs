@@ -1,4 +1,7 @@
 // @generated
+// TODO: Create seperate proto files for vault and strategy events 
+// Priority: Nice to have
+
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultInitEvent {
@@ -31,15 +34,11 @@ pub struct StrategyInitEvent {
     #[prost(uint32, tag="6")]
     pub underlying_decimals: u32,
     #[prost(uint64, tag="7")]
-    pub total_idle: u64,
-    #[prost(uint64, tag="8")]
-    pub total_funds: u64,
-    #[prost(uint64, tag="9")]
     pub deposit_limit: u64,
-    #[prost(uint64, tag="10")]
-    pub deposit_period_ends: u64,
-    #[prost(uint64, tag="11")]
-    pub lock_period_ends: u64,
+    #[prost(int64, tag="8")]
+    pub deposit_period_ends: i64,
+    #[prost(int64, tag="9")]
+    pub lock_period_ends: i64,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -97,7 +96,7 @@ pub struct StrategyDepositEvent {
     #[prost(uint64, tag="2")]
     pub amount: u64,
     #[prost(uint64, tag="3")]
-    pub total_funds: u64,
+    pub total_assets: u64,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -107,7 +106,7 @@ pub struct StrategyWithdrawEvent {
     #[prost(uint64, tag="2")]
     pub amount: u64,
     #[prost(uint64, tag="3")]
-    pub total_funds: u64,
+    pub total_assets: u64,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]

@@ -23,9 +23,6 @@ export function handleTransactions(bytes: Uint8Array): void {
                 log.info("Strategy {0} added to vault {1}",[strategy.id,vault.id]);
                 strategy.vault = vault.id;
                 strategy.save();
-                // vault.strategies.load().push(strategy);
-                // vault.strategyIds.push(strategy.id);
-                // vault.save();
            }
         }
     }else if(vaultEvent.vaultDeposit != null){
