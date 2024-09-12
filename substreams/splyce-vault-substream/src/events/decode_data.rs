@@ -2,18 +2,18 @@ use anchor_lang::AnchorDeserialize;
 use crate::{event_logs_structs::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog}, vault_logs::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog}}, pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}};
 
 use std::error::Error;
+use substreams::log;
+use crate::utils::utils;
 
 pub trait DecodeVaultData: Sized {
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>>;
     fn descriptor() -> [u8; 8];
 }
 
-//TODO: Explore option how to remove this hardcoded descriptor
-
 impl DecodeVaultData for VaultInitEvent {
 
     fn descriptor() -> [u8; 8] {
-         [173, 160, 208, 103, 85, 78, 229, 205]
+        utils::get_descriminator("VaultInitEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
@@ -38,7 +38,7 @@ impl DecodeVaultData for VaultInitEvent {
 impl DecodeVaultData for VaultAddStrtegyEvent {
 
     fn descriptor() -> [u8; 8] {
-        [246, 91, 229, 44, 239, 26, 28, 150]
+        utils::get_descriminator("VaultAddStrtegyEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
@@ -63,7 +63,7 @@ impl DecodeVaultData for VaultAddStrtegyEvent {
 impl DecodeVaultData for VaultDepositEvent {
 
     fn descriptor() -> [u8; 8] {
-        [187, 186, 196, 189, 175, 44, 10, 64]
+        utils::get_descriminator("VaultDepositEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
@@ -85,7 +85,7 @@ impl DecodeVaultData for VaultDepositEvent {
 impl DecodeVaultData for VaultWithdrawlEvent {
 
     fn descriptor() -> [u8; 8] {
-        [13, 122, 111, 4, 123, 191, 191, 248]
+        utils::get_descriminator("VaultWithdrawlEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
@@ -109,7 +109,7 @@ impl DecodeVaultData for VaultWithdrawlEvent {
 impl DecodeVaultData for VaultUpdateDepositLimitEvent {
 
     fn descriptor() -> [u8; 8] {
-        [19, 98, 248, 35, 149, 145, 56, 26]
+        utils::get_descriminator("VaultUpdateDepositLimitEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
@@ -131,7 +131,7 @@ impl DecodeVaultData for VaultUpdateDepositLimitEvent {
 impl DecodeVaultData for StrategyInitEvent {
 
     fn descriptor() -> [u8; 8] {
-        [33, 61, 4, 77, 20, 107, 154, 62]
+        utils::get_descriminator("StrategyInitEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
@@ -159,7 +159,7 @@ impl DecodeVaultData for StrategyInitEvent {
 impl DecodeVaultData for StrategyDepositEvent {
 
     fn descriptor() -> [u8; 8] {
-        [44, 150, 97, 77, 190, 106, 76, 237]
+        utils::get_descriminator("StrategyDepositEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
@@ -181,7 +181,7 @@ impl DecodeVaultData for StrategyDepositEvent {
 impl DecodeVaultData for StrategyWithdrawEvent {
 
     fn descriptor() -> [u8; 8] {
-        [120, 188, 132, 45, 215, 160, 115, 81]
+        utils::get_descriminator("StrategyWithdrawEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
