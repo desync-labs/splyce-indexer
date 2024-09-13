@@ -60,6 +60,7 @@ fn map_vault_events_from_logs(logs: VaultEventLogs) -> Result<VaultEvent, substr
     Ok(vault_event)
 }
 
+//TODO: Move this to a separate file
 fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
     let mut vault_event:VaultEvent = VaultEvent::default();
     

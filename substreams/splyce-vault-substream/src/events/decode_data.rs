@@ -10,6 +10,7 @@ pub trait DecodeVaultData: Sized {
     fn descriminator() -> [u8; 8];
 }
 
+//TODO: Check how to make this file modular and avoid the need to implement the same function for each event
 impl DecodeVaultData for VaultInitEvent {
 
     fn descriminator() -> [u8; 8] {
