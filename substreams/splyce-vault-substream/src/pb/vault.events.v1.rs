@@ -65,6 +65,8 @@ pub struct VaultDepositEvent {
     pub amount: u64,
     #[prost(uint64, tag="3")]
     pub share: u64,
+    #[prost(bytes="vec", tag="4")]
+    pub depositor: ::prost::alloc::vec::Vec<u8>,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -111,6 +113,8 @@ pub struct StrategyWithdrawEvent {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultEvent {
+    #[prost(string, tag="100")]
+    pub transaction_hash: ::prost::alloc::string::String,
     #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4, 5, 6, 7, 8")]
     pub event: ::core::option::Option<vault_event::Event>,
 }
@@ -143,5 +147,11 @@ pub mod vault_event {
 pub struct VaultEventLogs {
     #[prost(bytes="vec", repeated, tag="1")]
     pub logs: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
+    #[prost(string, tag="2")]
+    pub transaction_hash: ::prost::alloc::string::String,
+    #[prost(uint64, tag="3")]
+    pub block_height: u64,
+    #[prost(int64, tag="4")]
+    pub block_timestamp: i64,
 }
 // @@protoc_insertion_point(module)

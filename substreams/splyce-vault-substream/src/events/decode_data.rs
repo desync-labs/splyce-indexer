@@ -76,6 +76,7 @@ impl DecodeVaultData for VaultDepositEvent {
             vault_index: event.vault_index.to_vec(),
             amount: event.amount,
             share: event.share,
+            depositor: event.depositor.to_vec(),
         };
     
         Ok(deposit_event)

@@ -59,3 +59,39 @@ type Strategy @entity {
   # activeOnVaults: [Vault!] @derivedFrom(field: "strategies")
 
 }
+
+type Deposit @entity {
+  "Transaction-Log"
+  id: ID!
+  "Timestamp of update"
+  timestamp: BigInt!
+  "Block number of update"
+  blockNumber: BigInt!
+  "Account making Deposit"
+  account: Account!
+  "Vault deposited into"
+  vault: Vault!
+  "Number of Tokens deposited into Vault"
+  tokenAmount: BigInt!
+  "Number of new Vault Shares minted"
+  sharesMinted: BigInt!
+  # "Ethereum Transaction"
+  # transaction: Transaction!
+  # "Vault Update"
+  # vaultUpdate: VaultUpdate!
+}
+
+type Account @entity {
+  "Account address"
+  id: ID!
+  "Vault deposits"
+  deposits: [Deposit!]! @derivedFrom(field: "account")
+  # "Vault withdrawals"
+  # withdrawals: [Withdrawal!]! @derivedFrom(field: "account")
+  # "Vault positions"
+  # vaultPositions: [AccountVaultPosition!]! @derivedFrom(field: "account")
+  # "Incoming share transfers"
+  # sharesReceived: [Transfer!]! @derivedFrom(field: "to")
+  # "Outgoing share transfers"
+  # sharesSent: [Transfer!]! @derivedFrom(field: "from")
+}

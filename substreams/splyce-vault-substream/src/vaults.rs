@@ -9,7 +9,8 @@ fn filtered_event_logs(
     txns: Transactions,
 ) -> Result<VaultEventLogs, substreams::errors::Error> {
 
-    let mut program_event_logs1: Vec<Vec<u8>> = vec![vec![]];
+    let mut program_event_logs1: Vec<Vec<u8>> = vec![];
+    let mut trx_hash = "0x".to_string();
     // Filter and collect event logs
     for trx in txns.transactions {
         let program_event_logs: Vec<Vec<u8>> =  trx.meta.as_ref()
@@ -24,9 +25,10 @@ fn filtered_event_logs(
                     let remaining_log = log["Program data:".len()..].trim().to_string();
                     let borsh_bytes = base64::decode(&remaining_log).unwrap();
 
-                    let discriminator = read_descriminator(&borsh_bytes);
-                    log::info!("Event Discriminator = {:?}", discriminator);
-
+                    if let Some(transaction) = &trx.transaction { 
+                        trx_hash = bs58::encode(&transaction.signatures[0]).into_string();
+                    }
+                    
                     Some(borsh_bytes)
                 } else {
                     None
@@ -35,12 +37,17 @@ fn filtered_event_logs(
             .collect() // Collect results into a vector
         );
 
-        program_event_logs1.extend(program_event_logs)
+        program_event_logs1.extend(program_event_logs);   
+
     }
 
     Ok(VaultEventLogs {
         logs: program_event_logs1,
+        transaction_hash:trx_hash,
+        block_height: txns.block_height,
+        block_timestamp: txns.block_timestamp,
     })
+    
 }
 
 #[substreams::handlers::map]

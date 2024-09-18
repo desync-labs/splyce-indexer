@@ -26,6 +26,7 @@ pub struct VaultDepositLog {
     pub vault_index: [u8; 8],
     pub amount: u64,
     pub share: u64,
+    pub depositor: [u8 ; 32],
 }
 
 #[derive(Debug, AnchorDeserialize, AnchorSerialize)]
