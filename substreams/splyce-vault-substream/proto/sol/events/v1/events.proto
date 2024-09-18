@@ -81,7 +81,9 @@ message VaultEvent {
     StrategyDepositEvent strategyDeposit = 7;
     StrategyWithdrawEvent strategyWithdraw = 8;
   }
-  string transaction_hash = 100;
+  string transaction_hash = 1000;
+  uint64 block_height = 1001;
+  int64 block_timestamp = 1002;
 }
 
 //Raw logs from the vault program

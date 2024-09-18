@@ -113,8 +113,12 @@ pub struct StrategyWithdrawEvent {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultEvent {
-    #[prost(string, tag="100")]
+    #[prost(string, tag="1000")]
     pub transaction_hash: ::prost::alloc::string::String,
+    #[prost(uint64, tag="1001")]
+    pub block_height: u64,
+    #[prost(int64, tag="1002")]
+    pub block_timestamp: i64,
     #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4, 5, 6, 7, 8")]
     pub event: ::core::option::Option<vault_event::Event>,
 }

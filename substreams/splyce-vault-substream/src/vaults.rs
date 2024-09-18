@@ -62,6 +62,9 @@ fn map_vault_events_from_logs(logs: VaultEventLogs) -> Result<VaultEvent, substr
         }
 
         vault_event = decode_and_parse(log);
+        vault_event.transaction_hash = logs.transaction_hash.clone();
+        vault_event.block_height = logs.block_height.clone();
+        vault_event.block_timestamp = logs.block_timestamp.clone();
     }
 
     Ok(vault_event)
