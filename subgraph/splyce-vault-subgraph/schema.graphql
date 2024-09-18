@@ -28,6 +28,8 @@ type Vault @entity {
   apr: BigDecimal!
   "Strategies for this Vault"
   strategies: [Strategy!]! @derivedFrom(field: "vault")
+    "Token deposits into the Vault"
+  deposits: [Deposit!]! @derivedFrom(field: "vault")
   # "Strategy Ids for this vault"
   # strategyIds: [Strategy!]!
 

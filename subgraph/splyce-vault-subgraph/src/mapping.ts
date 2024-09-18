@@ -1,7 +1,7 @@
 import { BigDecimal, log, BigInt } from "@graphprotocol/graph-ts";
 import { Protobuf } from 'as-proto/assembly';
 import { VaultEvent } from "./pb/vault/events/v1/VaultEvent";
-import {Strategy, Token, Vault} from "../generated/schema";
+import {Account, Deposit, Strategy, Token, Vault} from "../generated/schema";
 import { VaultInitEvent } from "./pb/vault/events/v1/VaultInitEvent";
 import { StrategyInitEvent } from "./pb/vault/events/v1/StrategyInitEvent";
 
@@ -27,12 +27,15 @@ export function handleTransactions(bytes: Uint8Array): void {
         }
     }else if(vaultEvent.vaultDeposit != null){
         log.info("Deposit to vault {0}",[vaultEvent.vaultDeposit!.vaultIndex.join("")]);
+        createDepositEntity(vaultEvent);
+
         let vault = Vault.load(vaultEvent.vaultDeposit!.vaultIndex.join(""));
         if(vault != null){
             vault.totalIdle = vault.totalIdle.plus(BigInt.fromU64(vaultEvent.vaultDeposit!.amount));
-            vault.totalShare = vault.totalIdle.plus(BigInt.fromU64(vaultEvent.vaultDeposit!.share));
+            vault.totalShare = vault.totalShare.plus(BigInt.fromU64(vaultEvent.vaultDeposit!.share));
             vault.save();
         }
+
     }else if(vaultEvent.withdrwal != null){
         log.info("Withdrwal from vault {0}",[vaultEvent.withdrwal!.vaultIndex.join("")]);
         let vault = Vault.load(vaultEvent.withdrwal!.vaultIndex.join(""));
@@ -52,17 +55,37 @@ export function handleTransactions(bytes: Uint8Array): void {
         log.info("Deposit to strategy {0}",[vaultEvent.strategyDeposit!.accountKey.join("")]);
         let strategy = Strategy.load(vaultEvent.strategyDeposit!.accountKey.join(""));
         if(strategy != null){
-            strategy.totalFund = strategy.totalFund.plus(BigInt.fromU64(vaultEvent.strategyDeposit!.totalFunds));
+            strategy.totalFund = strategy.totalFund.plus(BigInt.fromU64(vaultEvent.strategyDeposit!.totalAssets));
             strategy.save();
         }
     }else if(vaultEvent.strategyWithdraw != null){
         log.info("Withdraw from strategy {0}",[vaultEvent.strategyWithdraw!.accountKey.join("")]);
         let strategy = Strategy.load(vaultEvent.strategyWithdraw!.accountKey.join(""));
         if(strategy != null){
-            strategy.totalFund = strategy.totalFund.minus(BigInt.fromU64(vaultEvent.strategyWithdraw!.totalFunds));
+            strategy.totalFund = strategy.totalFund.minus(BigInt.fromU64(vaultEvent.strategyWithdraw!.totalAssets));
             strategy.save();
         }
     }    
+}
+
+function createDepositEntity(vaultEvent: VaultEvent): Deposit {
+    
+    let account = Account.load(vaultEvent.vaultDeposit!.depositor.join(""));
+    if (account == null) {
+        account = new Account(vaultEvent.vaultDeposit!.depositor.join(""));
+        account.save();
+    }
+
+    let deposit = new Deposit(vaultEvent.transactionHash);
+    deposit.timestamp = BigInt.fromI64(vaultEvent.blockTimestamp);
+    deposit.blockNumber = BigInt.fromI64(vaultEvent.blockHeight);
+    deposit.account = vaultEvent.vaultDeposit!.depositor.join("");
+    deposit.vault = vaultEvent.vaultDeposit!.vaultIndex.join("");
+    deposit.tokenAmount = BigInt.fromU64(vaultEvent.vaultDeposit!.amount);
+    deposit.sharesMinted = BigInt.fromU64(vaultEvent.vaultDeposit!.share);
+    deposit.save();
+
+    return deposit
 }
 
 function getOrCreateVaultEntity(vaultInitEvent: VaultInitEvent): Vault {
@@ -90,8 +113,8 @@ function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitEvent): 
     if (strategy == null) {
         strategy = new Strategy(strategyInitializeEvent.accountKey.join(""));
         strategy.strategyType = strategyInitializeEvent.strategyType;
-        strategy.totalIdle =  BigInt.fromI64(strategyInitializeEvent.totalIdle);
-        strategy.totalFund =  BigInt.fromI64(strategyInitializeEvent.totalFunds);
+        // strategy.totalIdle =  BigInt.fromI64(strategyInitializeEvent.totalIdle);
+        // strategy.totalFund =  BigInt.fromI64(strategyInitializeEvent.totalFunds);
         strategy.depositLimit =  BigInt.fromI64(strategyInitializeEvent.depositLimit);
         strategy.depositPeriodEnds =  BigInt.fromI64(strategyInitializeEvent.depositPeriodEnds);
         strategy.lockPeriodEnds =  BigInt.fromI64(strategyInitializeEvent.lockPeriodEnds);

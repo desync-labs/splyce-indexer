@@ -13,7 +13,7 @@ export class StrategyWithdrawEvent {
     writer.uint64(message.amount);
 
     writer.uint32(24);
-    writer.uint64(message.totalFunds);
+    writer.uint64(message.totalAssets);
   }
 
   static decode(reader: Reader, length: i32): StrategyWithdrawEvent {
@@ -32,7 +32,7 @@ export class StrategyWithdrawEvent {
           break;
 
         case 3:
-          message.totalFunds = reader.uint64();
+          message.totalAssets = reader.uint64();
           break;
 
         default:
@@ -46,15 +46,15 @@ export class StrategyWithdrawEvent {
 
   accountKey: Uint8Array;
   amount: u64;
-  totalFunds: u64;
+  totalAssets: u64;
 
   constructor(
     accountKey: Uint8Array = new Uint8Array(0),
     amount: u64 = 0,
-    totalFunds: u64 = 0
+    totalAssets: u64 = 0
   ) {
     this.accountKey = accountKey;
     this.amount = amount;
-    this.totalFunds = totalFunds;
+    this.totalAssets = totalAssets;
   }
 }

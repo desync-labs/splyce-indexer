@@ -145,17 +145,4 @@ pub mod vault_event {
         StrategyWithdraw(super::StrategyWithdrawEvent),
     }
 }
-/// Raw logs from the vault program
-#[allow(clippy::derive_partial_eq_without_eq)]
-#[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VaultEventLogs {
-    #[prost(bytes="vec", repeated, tag="1")]
-    pub logs: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
-    #[prost(string, tag="2")]
-    pub transaction_hash: ::prost::alloc::string::String,
-    #[prost(uint64, tag="3")]
-    pub block_height: u64,
-    #[prost(int64, tag="4")]
-    pub block_timestamp: i64,
-}
 // @@protoc_insertion_point(module)

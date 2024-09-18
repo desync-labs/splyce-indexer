@@ -25,19 +25,13 @@ export class StrategyInitEvent {
     writer.uint32(message.underlyingDecimals);
 
     writer.uint32(56);
-    writer.uint64(message.totalIdle);
-
-    writer.uint32(64);
-    writer.uint64(message.totalFunds);
-
-    writer.uint32(72);
     writer.uint64(message.depositLimit);
 
-    writer.uint32(80);
-    writer.uint64(message.depositPeriodEnds);
+    writer.uint32(64);
+    writer.int64(message.depositPeriodEnds);
 
-    writer.uint32(88);
-    writer.uint64(message.lockPeriodEnds);
+    writer.uint32(72);
+    writer.int64(message.lockPeriodEnds);
   }
 
   static decode(reader: Reader, length: i32): StrategyInitEvent {
@@ -72,23 +66,15 @@ export class StrategyInitEvent {
           break;
 
         case 7:
-          message.totalIdle = reader.uint64();
-          break;
-
-        case 8:
-          message.totalFunds = reader.uint64();
-          break;
-
-        case 9:
           message.depositLimit = reader.uint64();
           break;
 
-        case 10:
-          message.depositPeriodEnds = reader.uint64();
+        case 8:
+          message.depositPeriodEnds = reader.int64();
           break;
 
-        case 11:
-          message.lockPeriodEnds = reader.uint64();
+        case 9:
+          message.lockPeriodEnds = reader.int64();
           break;
 
         default:
@@ -106,11 +92,9 @@ export class StrategyInitEvent {
   underlyingMint: Uint8Array;
   underlyingTokenAcc: Uint8Array;
   underlyingDecimals: u32;
-  totalIdle: u64;
-  totalFunds: u64;
   depositLimit: u64;
-  depositPeriodEnds: u64;
-  lockPeriodEnds: u64;
+  depositPeriodEnds: i64;
+  lockPeriodEnds: i64;
 
   constructor(
     accountKey: Uint8Array = new Uint8Array(0),
@@ -119,11 +103,9 @@ export class StrategyInitEvent {
     underlyingMint: Uint8Array = new Uint8Array(0),
     underlyingTokenAcc: Uint8Array = new Uint8Array(0),
     underlyingDecimals: u32 = 0,
-    totalIdle: u64 = 0,
-    totalFunds: u64 = 0,
     depositLimit: u64 = 0,
-    depositPeriodEnds: u64 = 0,
-    lockPeriodEnds: u64 = 0
+    depositPeriodEnds: i64 = 0,
+    lockPeriodEnds: i64 = 0
   ) {
     this.accountKey = accountKey;
     this.strategyType = strategyType;
@@ -131,8 +113,6 @@ export class StrategyInitEvent {
     this.underlyingMint = underlyingMint;
     this.underlyingTokenAcc = underlyingTokenAcc;
     this.underlyingDecimals = underlyingDecimals;
-    this.totalIdle = totalIdle;
-    this.totalFunds = totalFunds;
     this.depositLimit = depositLimit;
     this.depositPeriodEnds = depositPeriodEnds;
     this.lockPeriodEnds = lockPeriodEnds;

@@ -77,6 +77,15 @@ export class VaultEvent {
       StrategyWithdrawEvent.encode(strategyWithdraw, writer);
       writer.ldelim();
     }
+
+    writer.uint32(8002);
+    writer.string(message.transactionHash);
+
+    writer.uint32(8008);
+    writer.uint64(message.blockHeight);
+
+    writer.uint32(8016);
+    writer.int64(message.blockTimestamp);
   }
 
   static decode(reader: Reader, length: i32): VaultEvent {
@@ -142,6 +151,18 @@ export class VaultEvent {
           );
           break;
 
+        case 1000:
+          message.transactionHash = reader.string();
+          break;
+
+        case 1001:
+          message.blockHeight = reader.uint64();
+          break;
+
+        case 1002:
+          message.blockTimestamp = reader.int64();
+          break;
+
         default:
           reader.skipType(tag & 7);
           break;
@@ -159,6 +180,9 @@ export class VaultEvent {
   strategyInitialize: StrategyInitEvent | null;
   strategyDeposit: StrategyDepositEvent | null;
   strategyWithdraw: StrategyWithdrawEvent | null;
+  transactionHash: string;
+  blockHeight: u64;
+  blockTimestamp: i64;
 
   constructor(
     vaultInitialize: VaultInitEvent | null = null,
@@ -168,7 +192,10 @@ export class VaultEvent {
     updateDepositLimit: VaultUpdateDepositLimitEvent | null = null,
     strategyInitialize: StrategyInitEvent | null = null,
     strategyDeposit: StrategyDepositEvent | null = null,
-    strategyWithdraw: StrategyWithdrawEvent | null = null
+    strategyWithdraw: StrategyWithdrawEvent | null = null,
+    transactionHash: string = "",
+    blockHeight: u64 = 0,
+    blockTimestamp: i64 = 0
   ) {
     this.vaultInitialize = vaultInitialize;
     this.strategyAdd = strategyAdd;
@@ -178,5 +205,8 @@ export class VaultEvent {
     this.strategyInitialize = strategyInitialize;
     this.strategyDeposit = strategyDeposit;
     this.strategyWithdraw = strategyWithdraw;
+    this.transactionHash = transactionHash;
+    this.blockHeight = blockHeight;
+    this.blockTimestamp = blockTimestamp;
   }
 }
