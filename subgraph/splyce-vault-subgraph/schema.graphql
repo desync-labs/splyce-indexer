@@ -35,10 +35,10 @@ type Vault @entity {
 
 }
 
-enum StrategyType {
-  Simple
-  TradeFinTech
-}
+# enum StrategyType {
+#   Simple
+#   TradeFinTech
+# }
 
 type Strategy @entity {
   "Strategy address"
@@ -46,11 +46,11 @@ type Strategy @entity {
   "The Vault"
   vault: Vault
   "Strategy type"
-  strategyType: StrategyType!
+  strategyType: String!
   "Token this Strategy will accrue"
-  totalIdle: BigInt!
+  amount: BigInt!
   "Total amount of assets that has been deposited in strategies."
-  totalFund: BigInt!
+  totalAssets: BigInt!
   "The maximum amount of tokens that can be deposited in this Vault"
   depositLimit: BigInt!
   "Deposit period ends"

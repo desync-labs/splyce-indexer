@@ -17,7 +17,7 @@ pub struct VaultAddStrategyLog {
     pub strategy_key: [u8 ; 32],
     pub current_debt: u64,
     pub max_debt: u64,
-    pub last_update: u64,
+    pub last_update: i64,
     pub is_active: bool,    
 }
 

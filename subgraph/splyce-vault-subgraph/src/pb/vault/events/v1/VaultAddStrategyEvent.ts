@@ -4,8 +4,8 @@
 
 import { Writer, Reader } from "as-proto/assembly";
 
-export class VaultAddStrtegyEvent {
-  static encode(message: VaultAddStrtegyEvent, writer: Writer): void {
+export class VaultAddStrategyEvent {
+  static encode(message: VaultAddStrategyEvent, writer: Writer): void {
     writer.uint32(10);
     writer.bytes(message.vaultIndex);
 
@@ -19,15 +19,15 @@ export class VaultAddStrtegyEvent {
     writer.uint64(message.maxDebt);
 
     writer.uint32(40);
-    writer.uint64(message.lastUpdate);
+    writer.int64(message.lastUpdate);
 
     writer.uint32(48);
     writer.bool(message.isActive);
   }
 
-  static decode(reader: Reader, length: i32): VaultAddStrtegyEvent {
+  static decode(reader: Reader, length: i32): VaultAddStrategyEvent {
     const end: usize = length < 0 ? reader.end : reader.ptr + length;
-    const message = new VaultAddStrtegyEvent();
+    const message = new VaultAddStrategyEvent();
 
     while (reader.ptr < end) {
       const tag = reader.uint32();
@@ -49,7 +49,7 @@ export class VaultAddStrtegyEvent {
           break;
 
         case 5:
-          message.lastUpdate = reader.uint64();
+          message.lastUpdate = reader.int64();
           break;
 
         case 6:
@@ -69,7 +69,7 @@ export class VaultAddStrtegyEvent {
   strategyKey: Uint8Array;
   currentDebt: u64;
   maxDebt: u64;
-  lastUpdate: u64;
+  lastUpdate: i64;
   isActive: bool;
 
   constructor(
@@ -77,7 +77,7 @@ export class VaultAddStrtegyEvent {
     strategyKey: Uint8Array = new Uint8Array(0),
     currentDebt: u64 = 0,
     maxDebt: u64 = 0,
-    lastUpdate: u64 = 0,
+    lastUpdate: i64 = 0,
     isActive: bool = false
   ) {
     this.vaultIndex = vaultIndex;

@@ -1,5 +1,5 @@
 use anchor_lang::AnchorDeserialize;
-use crate::{event_logs_structs::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog}, vault_logs::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog}}, pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}};
+use crate::{event_logs_structs::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog}, vault_logs::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog}}, pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrategyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}};
 
 use std::error::Error;
 use substreams::log;
@@ -36,10 +36,10 @@ impl DecodeVaultData for VaultInitEvent {
 
 }
 
-impl DecodeVaultData for VaultAddStrtegyEvent {
+impl DecodeVaultData for VaultAddStrategyEvent {
 
     fn descriminator() -> [u8; 8] {
-        utils::get_descriminator("VaultAddStrtegyEvent")
+        utils::get_descriminator("VaultAddStrategyEvent")
     }
 
     fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
@@ -47,7 +47,7 @@ impl DecodeVaultData for VaultAddStrtegyEvent {
         let event: VaultAddStrategyLog = AnchorDeserialize::deserialize(data)
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
-        let strategy_add_event: VaultAddStrtegyEvent = VaultAddStrtegyEvent{
+        let strategy_add_event: VaultAddStrategyEvent = VaultAddStrategyEvent{
             vault_index: event.vault_index.to_vec(),
             strategy_key: event.strategy_key.to_vec(),
             current_debt: event.current_debt,

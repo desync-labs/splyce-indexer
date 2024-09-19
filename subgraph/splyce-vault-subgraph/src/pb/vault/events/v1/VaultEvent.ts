@@ -4,7 +4,7 @@
 
 import { Writer, Reader } from "as-proto/assembly";
 import { VaultInitEvent } from "./VaultInitEvent";
-import { VaultAddStrtegyEvent } from "./VaultAddStrtegyEvent";
+import { VaultAddStrategyEvent } from "./VaultAddStrategyEvent";
 import { VaultDepositEvent } from "./VaultDepositEvent";
 import { VaultWithdrawlEvent } from "./VaultWithdrawlEvent";
 import { VaultUpdateDepositLimitEvent } from "./VaultUpdateDepositLimitEvent";
@@ -26,7 +26,7 @@ export class VaultEvent {
     if (strategyAdd !== null) {
       writer.uint32(18);
       writer.fork();
-      VaultAddStrtegyEvent.encode(strategyAdd, writer);
+      VaultAddStrategyEvent.encode(strategyAdd, writer);
       writer.ldelim();
     }
 
@@ -103,7 +103,7 @@ export class VaultEvent {
           break;
 
         case 2:
-          message.strategyAdd = VaultAddStrtegyEvent.decode(
+          message.strategyAdd = VaultAddStrategyEvent.decode(
             reader,
             reader.uint32()
           );
@@ -173,7 +173,7 @@ export class VaultEvent {
   }
 
   vaultInitialize: VaultInitEvent | null;
-  strategyAdd: VaultAddStrtegyEvent | null;
+  strategyAdd: VaultAddStrategyEvent | null;
   vaultDeposit: VaultDepositEvent | null;
   withdrwal: VaultWithdrawlEvent | null;
   updateDepositLimit: VaultUpdateDepositLimitEvent | null;
@@ -186,7 +186,7 @@ export class VaultEvent {
 
   constructor(
     vaultInitialize: VaultInitEvent | null = null,
-    strategyAdd: VaultAddStrtegyEvent | null = null,
+    strategyAdd: VaultAddStrategyEvent | null = null,
     vaultDeposit: VaultDepositEvent | null = null,
     withdrwal: VaultWithdrawlEvent | null = null,
     updateDepositLimit: VaultUpdateDepositLimitEvent | null = null,

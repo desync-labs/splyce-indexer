@@ -2,7 +2,7 @@ use std::vec;
 use substreams::log;
 use std::error::Error;
 
-use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrtegyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}}, utils::utils::read_descriminator};
+use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrategyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}}, utils::utils::read_descriminator};
 
 #[substreams::handlers::map]
 fn filtered_event_logs(
@@ -91,8 +91,8 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode vault init data: {}", e);
             }
         }
-    }else if VaultAddStrtegyEvent::descriminator() == disc{
-        match decode_and_parse_to_protobuf::<VaultAddStrtegyEvent>(&mut slice) {
+    }else if VaultAddStrategyEvent::descriminator() == disc{
+        match decode_and_parse_to_protobuf::<VaultAddStrategyEvent>(&mut slice) {
             Ok(parsed_event) => {
                 vault_event.event = Some(vault_event::Event::StrategyAdd(parsed_event))
             },

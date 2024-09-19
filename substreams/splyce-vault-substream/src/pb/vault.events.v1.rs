@@ -42,7 +42,7 @@ pub struct StrategyInitEvent {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
-pub struct VaultAddStrtegyEvent {
+pub struct VaultAddStrategyEvent {
     #[prost(bytes="vec", tag="1")]
     pub vault_index: ::prost::alloc::vec::Vec<u8>,
     #[prost(bytes="vec", tag="2")]
@@ -51,8 +51,8 @@ pub struct VaultAddStrtegyEvent {
     pub current_debt: u64,
     #[prost(uint64, tag="4")]
     pub max_debt: u64,
-    #[prost(uint64, tag="5")]
-    pub last_update: u64,
+    #[prost(int64, tag="5")]
+    pub last_update: i64,
     #[prost(bool, tag="6")]
     pub is_active: bool,
 }
@@ -130,7 +130,7 @@ pub mod vault_event {
         #[prost(message, tag="1")]
         VaultInitialize(super::VaultInitEvent),
         #[prost(message, tag="2")]
-        StrategyAdd(super::VaultAddStrtegyEvent),
+        StrategyAdd(super::VaultAddStrategyEvent),
         #[prost(message, tag="3")]
         VaultDeposit(super::VaultDepositEvent),
         #[prost(message, tag="4")]
@@ -144,5 +144,18 @@ pub mod vault_event {
         #[prost(message, tag="8")]
         StrategyWithdraw(super::StrategyWithdrawEvent),
     }
+}
+/// Raw logs from the vault program
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct VaultEventLogs {
+    #[prost(bytes="vec", repeated, tag="1")]
+    pub logs: ::prost::alloc::vec::Vec<::prost::alloc::vec::Vec<u8>>,
+    #[prost(string, tag="2")]
+    pub transaction_hash: ::prost::alloc::string::String,
+    #[prost(uint64, tag="3")]
+    pub block_height: u64,
+    #[prost(int64, tag="4")]
+    pub block_timestamp: i64,
 }
 // @@protoc_insertion_point(module)

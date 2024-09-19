@@ -1,7 +1,7 @@
 import { BigDecimal, log, BigInt } from "@graphprotocol/graph-ts";
 import { Protobuf } from 'as-proto/assembly';
-import { VaultEvent } from "./pb/vault/events/v1/VaultEvent";
 import {Account, Deposit, Strategy, Token, Vault} from "../generated/schema";
+import { VaultEvent } from "./pb/vault/events/v1/VaultEvent";
 import { VaultInitEvent } from "./pb/vault/events/v1/VaultInitEvent";
 import { StrategyInitEvent } from "./pb/vault/events/v1/StrategyInitEvent";
 
@@ -9,24 +9,24 @@ export function handleTransactions(bytes: Uint8Array): void {
     const vaultEvent: VaultEvent = Protobuf.decode<VaultEvent>(bytes, VaultEvent.decode);
 
     if (vaultEvent.vaultInitialize !== null) {
-        log.info("Initializing vault: {0}", [vaultEvent.vaultInitialize!.vaultIndex.join("")]);
+        log.info("Initializing vault: {}", [vaultEvent.vaultInitialize!.vaultIndex.join("")]);
         getOrCreateVaultEntity(vaultEvent.vaultInitialize!)
     }else if(vaultEvent.strategyInitialize != null){
-        log.info("Initializing strategy: {0}", [vaultEvent.strategyInitialize!.accountKey.join("")]);
+        log.info("Initializing strategy: {}", [vaultEvent.strategyInitialize!.accountKey.join("")]);
         getOrCreateStrategyEntity(vaultEvent.strategyInitialize!);
     }else if(vaultEvent.strategyAdd != null){
-        log.info("Add strategy to vault {0}",[vaultEvent.strategyAdd!.strategyKey.join("")]);
+        log.info("Add strategy to vault {}",[vaultEvent.strategyAdd!.strategyKey.join("")]);
         let vault = Vault.load(vaultEvent.strategyAdd!.vaultIndex.join(""));
         if(vault != null){
            let strategy = Strategy.load(vaultEvent.strategyAdd!.strategyKey.join("")); 
            if(strategy != null){
-                log.info("Strategy {0} added to vault {1}",[strategy.id,vault.id]);
+                log.info("Strategy {} added to vault {1}",[strategy.id,vault.id]);
                 strategy.vault = vault.id;
                 strategy.save();
            }
         }
     }else if(vaultEvent.vaultDeposit != null){
-        log.info("Deposit to vault {0}",[vaultEvent.vaultDeposit!.vaultIndex.join("")]);
+        log.info("Deposit to vault {}",[vaultEvent.vaultDeposit!.vaultIndex.join("")]);
         createDepositEntity(vaultEvent);
 
         let vault = Vault.load(vaultEvent.vaultDeposit!.vaultIndex.join(""));
@@ -37,7 +37,7 @@ export function handleTransactions(bytes: Uint8Array): void {
         }
 
     }else if(vaultEvent.withdrwal != null){
-        log.info("Withdrwal from vault {0}",[vaultEvent.withdrwal!.vaultIndex.join("")]);
+        log.info("Withdrwal from vault {}",[vaultEvent.withdrwal!.vaultIndex.join("")]);
         let vault = Vault.load(vaultEvent.withdrwal!.vaultIndex.join(""));
         if(vault != null){
             vault.totalIdle = BigInt.fromU64(vaultEvent.withdrwal!.totalIdle);
@@ -45,24 +45,24 @@ export function handleTransactions(bytes: Uint8Array): void {
             vault.save();
         }
     }else if(vaultEvent.updateDepositLimit != null){
-        log.info("Update deposit limit from vault {0}",[vaultEvent.updateDepositLimit!.vaultIndex.join("")]);
+        log.info("Update deposit limit from vault {}",[vaultEvent.updateDepositLimit!.vaultIndex.join("")]);
         let vault = Vault.load(vaultEvent.updateDepositLimit!.vaultIndex.join(""));
         if(vault != null){
             vault.depositLimit = BigInt.fromU64(vaultEvent.updateDepositLimit!.newLimit);
             vault.save();
         }
     }else if(vaultEvent.strategyDeposit != null){
-        log.info("Deposit to strategy {0}",[vaultEvent.strategyDeposit!.accountKey.join("")]);
+        log.info("Deposit to strategy {}",[vaultEvent.strategyDeposit!.accountKey.join("")]);
         let strategy = Strategy.load(vaultEvent.strategyDeposit!.accountKey.join(""));
         if(strategy != null){
-            strategy.totalFund = strategy.totalFund.plus(BigInt.fromU64(vaultEvent.strategyDeposit!.totalAssets));
+            strategy.totalAssets = strategy.totalAssets.plus(BigInt.fromU64(vaultEvent.strategyDeposit!.totalAssets));
             strategy.save();
         }
     }else if(vaultEvent.strategyWithdraw != null){
-        log.info("Withdraw from strategy {0}",[vaultEvent.strategyWithdraw!.accountKey.join("")]);
+        log.info("Withdraw from strategy {}",[vaultEvent.strategyWithdraw!.accountKey.join("")]);
         let strategy = Strategy.load(vaultEvent.strategyWithdraw!.accountKey.join(""));
         if(strategy != null){
-            strategy.totalFund = strategy.totalFund.minus(BigInt.fromU64(vaultEvent.strategyWithdraw!.totalAssets));
+            strategy.totalAssets = strategy.totalAssets.minus(BigInt.fromU64(vaultEvent.strategyWithdraw!.totalAssets));
             strategy.save();
         }
     }    
@@ -112,12 +112,19 @@ function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitEvent): 
     let strategy = Strategy.load(strategyInitializeEvent.accountKey.join(""));
     if (strategy == null) {
         strategy = new Strategy(strategyInitializeEvent.accountKey.join(""));
+
         strategy.strategyType = strategyInitializeEvent.strategyType;
-        // strategy.totalIdle =  BigInt.fromI64(strategyInitializeEvent.totalIdle);
-        // strategy.totalFund =  BigInt.fromI64(strategyInitializeEvent.totalFunds);
-        strategy.depositLimit =  BigInt.fromI64(strategyInitializeEvent.depositLimit);
+        strategy.amount =  BigInt.fromI64(0);
+        strategy.totalAssets =  BigInt.fromI64(0);
+        strategy.depositLimit =  BigInt.fromU64(strategyInitializeEvent.depositLimit);
         strategy.depositPeriodEnds =  BigInt.fromI64(strategyInitializeEvent.depositPeriodEnds);
         strategy.lockPeriodEnds =  BigInt.fromI64(strategyInitializeEvent.lockPeriodEnds);
+
+        strategy.vault = strategyInitializeEvent.vault.join("");
+        log.info("===========================",[]);
+        log.info("Strategy added to vault {}",[strategyInitializeEvent.vault.join("")]);
+        log.info("===========================",[]);
+
         strategy.save()
     }
 

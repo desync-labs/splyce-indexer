@@ -26,12 +26,12 @@ message StrategyInitEvent {
   int64 lock_period_ends = 9;
 }
 
-message VaultAddStrtegyEvent {
+message VaultAddStrategyEvent {
   bytes vault_index = 1;
   bytes strategy_key = 2;
   uint64 current_debt = 3;
   uint64 max_debt = 4;
-  uint64 last_update = 5;
+  int64 last_update = 5;
   bool is_active = 6;
 }
 
@@ -73,7 +73,7 @@ message StrategyWithdrawEvent {
 message VaultEvent {
   oneof event {
     VaultInitEvent vaultInitialize = 1;
-    VaultAddStrtegyEvent strategyAdd = 2;
+    VaultAddStrategyEvent strategyAdd = 2;
     VaultDepositEvent vaultDeposit = 3;
     VaultWithdrawlEvent withdrwal = 4;
     VaultUpdateDepositLimitEvent updateDepositLimit = 5;
