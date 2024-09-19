@@ -6,20 +6,20 @@ package vault.events.v1;
 //Priority: Nice to have
 
 message VaultInitEvent {
-  bytes vault_index = 1;
-  bytes underlying_mint = 2;
-  bytes underlying_token_acc = 3;
+  string vault_index = 1;
+  string underlying_mint = 2;
+  string underlying_token_acc = 3;
   uint32 underlying_decimals = 4;
   uint64 deposit_limit = 5;
   uint64 min_user_deposit = 6;
 }
 
 message StrategyInitEvent {
-  bytes account_key = 1;
+  string account_key = 1;
   string strategy_type = 2;
-  bytes  vault = 3;
-  bytes underlying_mint = 4;
-  bytes underlying_token_acc = 5;
+  string  vault = 3;
+  string underlying_mint = 4;
+  string underlying_token_acc = 5;
   uint32 underlying_decimals = 6;
   uint64 deposit_limit = 7;
   int64 deposit_period_ends = 8;
@@ -27,8 +27,8 @@ message StrategyInitEvent {
 }
 
 message VaultAddStrategyEvent {
-  bytes vault_index = 1;
-  bytes strategy_key = 2;
+  string vault_index = 1;
+  string strategy_key = 2;
   uint64 current_debt = 3;
   uint64 max_debt = 4;
   int64 last_update = 5;
@@ -36,7 +36,7 @@ message VaultAddStrategyEvent {
 }
 
 message VaultDepositEvent {
-  bytes vault_index = 1;
+  string vault_index = 1;
   uint64 amount = 2;
   uint64 share = 3;
   string token_account = 4;
@@ -46,13 +46,13 @@ message VaultDepositEvent {
 
 
 message VaultUpdateDepositLimitEvent {
-  bytes vault_index = 1;
+  string vault_index = 1;
   uint64 new_limit = 2;
 }
 
 
 message VaultWithdrawlEvent {
-  bytes vault_index = 1;
+  string vault_index = 1;
   uint64 total_idle = 2;
   uint64 total_share = 3;
   uint64 assets_to_transfer = 4;
@@ -63,13 +63,13 @@ message VaultWithdrawlEvent {
 }
 
 message StrategyDepositEvent {
-  bytes account_key = 1;
+  string account_key = 1;
   uint64 amount = 2;
   uint64 total_assets = 3;
 }
 
 message StrategyWithdrawEvent {
-  bytes account_key = 1;
+  string account_key = 1;
   uint64 amount = 2;
   uint64 total_assets = 3;
 }

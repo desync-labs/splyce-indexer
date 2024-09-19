@@ -5,12 +5,12 @@
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultInitEvent {
-    #[prost(bytes="vec", tag="1")]
-    pub vault_index: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes="vec", tag="2")]
-    pub underlying_mint: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes="vec", tag="3")]
-    pub underlying_token_acc: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub vault_index: ::prost::alloc::string::String,
+    #[prost(string, tag="2")]
+    pub underlying_mint: ::prost::alloc::string::String,
+    #[prost(string, tag="3")]
+    pub underlying_token_acc: ::prost::alloc::string::String,
     #[prost(uint32, tag="4")]
     pub underlying_decimals: u32,
     #[prost(uint64, tag="5")]
@@ -21,16 +21,16 @@ pub struct VaultInitEvent {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StrategyInitEvent {
-    #[prost(bytes="vec", tag="1")]
-    pub account_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub account_key: ::prost::alloc::string::String,
     #[prost(string, tag="2")]
     pub strategy_type: ::prost::alloc::string::String,
-    #[prost(bytes="vec", tag="3")]
-    pub vault: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes="vec", tag="4")]
-    pub underlying_mint: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes="vec", tag="5")]
-    pub underlying_token_acc: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="3")]
+    pub vault: ::prost::alloc::string::String,
+    #[prost(string, tag="4")]
+    pub underlying_mint: ::prost::alloc::string::String,
+    #[prost(string, tag="5")]
+    pub underlying_token_acc: ::prost::alloc::string::String,
     #[prost(uint32, tag="6")]
     pub underlying_decimals: u32,
     #[prost(uint64, tag="7")]
@@ -43,10 +43,10 @@ pub struct StrategyInitEvent {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultAddStrategyEvent {
-    #[prost(bytes="vec", tag="1")]
-    pub vault_index: ::prost::alloc::vec::Vec<u8>,
-    #[prost(bytes="vec", tag="2")]
-    pub strategy_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub vault_index: ::prost::alloc::string::String,
+    #[prost(string, tag="2")]
+    pub strategy_key: ::prost::alloc::string::String,
     #[prost(uint64, tag="3")]
     pub current_debt: u64,
     #[prost(uint64, tag="4")]
@@ -59,8 +59,8 @@ pub struct VaultAddStrategyEvent {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultDepositEvent {
-    #[prost(bytes="vec", tag="1")]
-    pub vault_index: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub vault_index: ::prost::alloc::string::String,
     #[prost(uint64, tag="2")]
     pub amount: u64,
     #[prost(uint64, tag="3")]
@@ -75,16 +75,16 @@ pub struct VaultDepositEvent {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultUpdateDepositLimitEvent {
-    #[prost(bytes="vec", tag="1")]
-    pub vault_index: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub vault_index: ::prost::alloc::string::String,
     #[prost(uint64, tag="2")]
     pub new_limit: u64,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultWithdrawlEvent {
-    #[prost(bytes="vec", tag="1")]
-    pub vault_index: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub vault_index: ::prost::alloc::string::String,
     #[prost(uint64, tag="2")]
     pub total_idle: u64,
     #[prost(uint64, tag="3")]
@@ -103,8 +103,8 @@ pub struct VaultWithdrawlEvent {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StrategyDepositEvent {
-    #[prost(bytes="vec", tag="1")]
-    pub account_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub account_key: ::prost::alloc::string::String,
     #[prost(uint64, tag="2")]
     pub amount: u64,
     #[prost(uint64, tag="3")]
@@ -113,8 +113,8 @@ pub struct StrategyDepositEvent {
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct StrategyWithdrawEvent {
-    #[prost(bytes="vec", tag="1")]
-    pub account_key: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="1")]
+    pub account_key: ::prost::alloc::string::String,
     #[prost(uint64, tag="2")]
     pub amount: u64,
     #[prost(uint64, tag="3")]

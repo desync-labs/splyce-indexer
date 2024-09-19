@@ -23,9 +23,9 @@ impl DecodeVaultData for VaultInitEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let init_event: VaultInitEvent = VaultInitEvent{
-            vault_index: event.vault_index.to_vec(),
-            underlying_mint: event.underlying_mint.to_vec(),
-            underlying_token_acc: event.underlying_token_acc.to_vec(),
+            vault_index: bs58::encode(event.vault_index).into_string(),
+            underlying_mint: bs58::encode(event.underlying_mint).into_string(),
+            underlying_token_acc: bs58::encode(event.underlying_token_acc).into_string(),
             underlying_decimals: u32::from(event.underlying_decimals),
             deposit_limit: event.deposit_limit,
             min_user_deposit: event.min_user_deposit,
@@ -48,8 +48,8 @@ impl DecodeVaultData for VaultAddStrategyEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let strategy_add_event: VaultAddStrategyEvent = VaultAddStrategyEvent{
-            vault_index: event.vault_index.to_vec(),
-            strategy_key: event.strategy_key.to_vec(),
+            vault_index: bs58::encode(event.vault_index).into_string(),
+            strategy_key: bs58::encode(event.strategy_key).into_string(),
             current_debt: event.current_debt,
             max_debt: event.max_debt,
             last_update: event.last_update,
@@ -73,7 +73,7 @@ impl DecodeVaultData for VaultDepositEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let deposit_event: VaultDepositEvent = VaultDepositEvent{
-            vault_index: event.vault_index.to_vec(),
+            vault_index: bs58::encode(event.vault_index).into_string(),
             amount: event.amount,
             share: event.share,
             token_account: bs58::encode(event.token_account).into_string(),
@@ -98,7 +98,7 @@ impl DecodeVaultData for VaultWithdrawlEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let withdraw_event: VaultWithdrawlEvent = VaultWithdrawlEvent{
-            vault_index: event.vault_index.to_vec(),
+            vault_index: bs58::encode(event.vault_index).into_string(),
             total_idle: event.total_idle,
             total_share: event.total_share,
             assets_to_transfer: event.assets_to_transfer,
@@ -125,7 +125,7 @@ impl DecodeVaultData for VaultUpdateDepositLimitEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let update_limit_event: VaultUpdateDepositLimitEvent = VaultUpdateDepositLimitEvent{
-            vault_index: event.vault_index.to_vec(),
+            vault_index: bs58::encode(event.vault_index).into_string(),
             new_limit: event.new_limit,
         };
     
@@ -147,11 +147,11 @@ impl DecodeVaultData for StrategyInitEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let init_event: StrategyInitEvent = StrategyInitEvent{
-            account_key: event.account_key.to_vec(),
+            account_key: bs58::encode(event.account_key).into_string(),
             strategy_type: event.strategy_type,
-            vault : event.vault.to_vec(),
-            underlying_mint: event.underlying_mint.to_vec(),
-            underlying_token_acc: event.underlying_token_acc.to_vec(),
+            vault : bs58::encode(event.vault).into_string(),
+            underlying_mint: bs58::encode(event.underlying_mint).into_string(),
+            underlying_token_acc: bs58::encode(event.underlying_token_acc).into_string(),
             underlying_decimals: u32::from(event.undelying_decimals),
             deposit_limit: event.deposit_limit,
             deposit_period_ends: event.deposit_period_ends,
@@ -175,7 +175,7 @@ impl DecodeVaultData for StrategyDepositEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let deposit_event: StrategyDepositEvent = StrategyDepositEvent { 
-            account_key: event.account_key.to_vec(), 
+            account_key: bs58::encode(event.account_key).into_string(), 
             amount: event.amount, 
             total_assets: event.total_assets 
         };
@@ -197,7 +197,7 @@ impl DecodeVaultData for StrategyWithdrawEvent {
                         .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
     
         let withdraw_event: StrategyWithdrawEvent = StrategyWithdrawEvent { 
-            account_key: event.account_key.to_vec(), 
+            account_key: bs58::encode(event.account_key).into_string(),
             amount: event.amount, 
             total_assets: event.total_assets 
         };
