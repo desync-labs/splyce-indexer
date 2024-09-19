@@ -39,7 +39,9 @@ message VaultDepositEvent {
   bytes vault_index = 1;
   uint64 amount = 2;
   uint64 share = 3;
-  bytes depositor = 4;
+  string token_account = 4;
+  string share_account = 5;
+  string authority = 6;
 }
 
 
@@ -55,8 +57,10 @@ message VaultWithdrawlEvent {
   uint64 total_share = 3;
   uint64 assets_to_transfer = 4;
   uint64 shares_to_burn = 5;
+  string token_account = 6;
+  string share_account = 7;
+  string authority = 8;
 }
-
 
 message StrategyDepositEvent {
   bytes account_key = 1;

@@ -76,7 +76,9 @@ impl DecodeVaultData for VaultDepositEvent {
             vault_index: event.vault_index.to_vec(),
             amount: event.amount,
             share: event.share,
-            depositor: event.depositor.to_vec(),
+            token_account: bs58::encode(event.token_account).into_string(),
+            share_account: bs58::encode(event.share_account).into_string(),
+            authority: bs58::encode(event.authority).into_string(),
         };
     
         Ok(deposit_event)
@@ -101,6 +103,9 @@ impl DecodeVaultData for VaultWithdrawlEvent {
             total_share: event.total_share,
             assets_to_transfer: event.assets_to_transfer,
             shares_to_burn: event.shares_to_burn,
+            token_account: bs58::encode(event.token_account).into_string(),
+            share_account: bs58::encode(event.share_account).into_string(),
+            authority: bs58::encode(event.authority).into_string(),
         };
     
         Ok(withdraw_event)

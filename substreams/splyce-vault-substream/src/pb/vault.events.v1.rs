@@ -65,8 +65,12 @@ pub struct VaultDepositEvent {
     pub amount: u64,
     #[prost(uint64, tag="3")]
     pub share: u64,
-    #[prost(bytes="vec", tag="4")]
-    pub depositor: ::prost::alloc::vec::Vec<u8>,
+    #[prost(string, tag="4")]
+    pub token_account: ::prost::alloc::string::String,
+    #[prost(string, tag="5")]
+    pub share_account: ::prost::alloc::string::String,
+    #[prost(string, tag="6")]
+    pub authority: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -89,6 +93,12 @@ pub struct VaultWithdrawlEvent {
     pub assets_to_transfer: u64,
     #[prost(uint64, tag="5")]
     pub shares_to_burn: u64,
+    #[prost(string, tag="6")]
+    pub token_account: ::prost::alloc::string::String,
+    #[prost(string, tag="7")]
+    pub share_account: ::prost::alloc::string::String,
+    #[prost(string, tag="8")]
+    pub authority: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
