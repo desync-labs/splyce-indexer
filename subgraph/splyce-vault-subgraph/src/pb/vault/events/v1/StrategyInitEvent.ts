@@ -7,19 +7,19 @@ import { Writer, Reader } from "as-proto/assembly";
 export class StrategyInitEvent {
   static encode(message: StrategyInitEvent, writer: Writer): void {
     writer.uint32(10);
-    writer.bytes(message.accountKey);
+    writer.string(message.accountKey);
 
     writer.uint32(18);
     writer.string(message.strategyType);
 
     writer.uint32(26);
-    writer.bytes(message.vault);
+    writer.string(message.vault);
 
     writer.uint32(34);
-    writer.bytes(message.underlyingMint);
+    writer.string(message.underlyingMint);
 
     writer.uint32(42);
-    writer.bytes(message.underlyingTokenAcc);
+    writer.string(message.underlyingTokenAcc);
 
     writer.uint32(48);
     writer.uint32(message.underlyingDecimals);
@@ -42,7 +42,7 @@ export class StrategyInitEvent {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.accountKey = reader.bytes();
+          message.accountKey = reader.string();
           break;
 
         case 2:
@@ -50,15 +50,15 @@ export class StrategyInitEvent {
           break;
 
         case 3:
-          message.vault = reader.bytes();
+          message.vault = reader.string();
           break;
 
         case 4:
-          message.underlyingMint = reader.bytes();
+          message.underlyingMint = reader.string();
           break;
 
         case 5:
-          message.underlyingTokenAcc = reader.bytes();
+          message.underlyingTokenAcc = reader.string();
           break;
 
         case 6:
@@ -86,22 +86,22 @@ export class StrategyInitEvent {
     return message;
   }
 
-  accountKey: Uint8Array;
+  accountKey: string;
   strategyType: string;
-  vault: Uint8Array;
-  underlyingMint: Uint8Array;
-  underlyingTokenAcc: Uint8Array;
+  vault: string;
+  underlyingMint: string;
+  underlyingTokenAcc: string;
   underlyingDecimals: u32;
   depositLimit: u64;
   depositPeriodEnds: i64;
   lockPeriodEnds: i64;
 
   constructor(
-    accountKey: Uint8Array = new Uint8Array(0),
+    accountKey: string = "",
     strategyType: string = "",
-    vault: Uint8Array = new Uint8Array(0),
-    underlyingMint: Uint8Array = new Uint8Array(0),
-    underlyingTokenAcc: Uint8Array = new Uint8Array(0),
+    vault: string = "",
+    underlyingMint: string = "",
+    underlyingTokenAcc: string = "",
     underlyingDecimals: u32 = 0,
     depositLimit: u64 = 0,
     depositPeriodEnds: i64 = 0,

@@ -7,7 +7,7 @@ import { Writer, Reader } from "as-proto/assembly";
 export class VaultDepositEvent {
   static encode(message: VaultDepositEvent, writer: Writer): void {
     writer.uint32(10);
-    writer.bytes(message.vaultIndex);
+    writer.string(message.vaultIndex);
 
     writer.uint32(16);
     writer.uint64(message.amount);
@@ -33,7 +33,7 @@ export class VaultDepositEvent {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.vaultIndex = reader.bytes();
+          message.vaultIndex = reader.string();
           break;
 
         case 2:
@@ -65,7 +65,7 @@ export class VaultDepositEvent {
     return message;
   }
 
-  vaultIndex: Uint8Array;
+  vaultIndex: string;
   amount: u64;
   share: u64;
   tokenAccount: string;
@@ -73,7 +73,7 @@ export class VaultDepositEvent {
   authority: string;
 
   constructor(
-    vaultIndex: Uint8Array = new Uint8Array(0),
+    vaultIndex: string = "",
     amount: u64 = 0,
     share: u64 = 0,
     tokenAccount: string = "",

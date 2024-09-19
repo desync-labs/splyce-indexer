@@ -7,10 +7,10 @@ import { Writer, Reader } from "as-proto/assembly";
 export class VaultAddStrategyEvent {
   static encode(message: VaultAddStrategyEvent, writer: Writer): void {
     writer.uint32(10);
-    writer.bytes(message.vaultIndex);
+    writer.string(message.vaultIndex);
 
     writer.uint32(18);
-    writer.bytes(message.strategyKey);
+    writer.string(message.strategyKey);
 
     writer.uint32(24);
     writer.uint64(message.currentDebt);
@@ -33,11 +33,11 @@ export class VaultAddStrategyEvent {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.vaultIndex = reader.bytes();
+          message.vaultIndex = reader.string();
           break;
 
         case 2:
-          message.strategyKey = reader.bytes();
+          message.strategyKey = reader.string();
           break;
 
         case 3:
@@ -65,16 +65,16 @@ export class VaultAddStrategyEvent {
     return message;
   }
 
-  vaultIndex: Uint8Array;
-  strategyKey: Uint8Array;
+  vaultIndex: string;
+  strategyKey: string;
   currentDebt: u64;
   maxDebt: u64;
   lastUpdate: i64;
   isActive: bool;
 
   constructor(
-    vaultIndex: Uint8Array = new Uint8Array(0),
-    strategyKey: Uint8Array = new Uint8Array(0),
+    vaultIndex: string = "",
+    strategyKey: string = "",
     currentDebt: u64 = 0,
     maxDebt: u64 = 0,
     lastUpdate: i64 = 0,

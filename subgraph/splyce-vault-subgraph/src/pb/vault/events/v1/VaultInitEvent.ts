@@ -7,13 +7,13 @@ import { Writer, Reader } from "as-proto/assembly";
 export class VaultInitEvent {
   static encode(message: VaultInitEvent, writer: Writer): void {
     writer.uint32(10);
-    writer.bytes(message.vaultIndex);
+    writer.string(message.vaultIndex);
 
     writer.uint32(18);
-    writer.bytes(message.underlyingMint);
+    writer.string(message.underlyingMint);
 
     writer.uint32(26);
-    writer.bytes(message.underlyingTokenAcc);
+    writer.string(message.underlyingTokenAcc);
 
     writer.uint32(32);
     writer.uint32(message.underlyingDecimals);
@@ -33,15 +33,15 @@ export class VaultInitEvent {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.vaultIndex = reader.bytes();
+          message.vaultIndex = reader.string();
           break;
 
         case 2:
-          message.underlyingMint = reader.bytes();
+          message.underlyingMint = reader.string();
           break;
 
         case 3:
-          message.underlyingTokenAcc = reader.bytes();
+          message.underlyingTokenAcc = reader.string();
           break;
 
         case 4:
@@ -65,17 +65,17 @@ export class VaultInitEvent {
     return message;
   }
 
-  vaultIndex: Uint8Array;
-  underlyingMint: Uint8Array;
-  underlyingTokenAcc: Uint8Array;
+  vaultIndex: string;
+  underlyingMint: string;
+  underlyingTokenAcc: string;
   underlyingDecimals: u32;
   depositLimit: u64;
   minUserDeposit: u64;
 
   constructor(
-    vaultIndex: Uint8Array = new Uint8Array(0),
-    underlyingMint: Uint8Array = new Uint8Array(0),
-    underlyingTokenAcc: Uint8Array = new Uint8Array(0),
+    vaultIndex: string = "",
+    underlyingMint: string = "",
+    underlyingTokenAcc: string = "",
     underlyingDecimals: u32 = 0,
     depositLimit: u64 = 0,
     minUserDeposit: u64 = 0

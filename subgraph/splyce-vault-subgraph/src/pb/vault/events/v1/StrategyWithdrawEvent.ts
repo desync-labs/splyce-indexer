@@ -7,7 +7,7 @@ import { Writer, Reader } from "as-proto/assembly";
 export class StrategyWithdrawEvent {
   static encode(message: StrategyWithdrawEvent, writer: Writer): void {
     writer.uint32(10);
-    writer.bytes(message.accountKey);
+    writer.string(message.accountKey);
 
     writer.uint32(16);
     writer.uint64(message.amount);
@@ -24,7 +24,7 @@ export class StrategyWithdrawEvent {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.accountKey = reader.bytes();
+          message.accountKey = reader.string();
           break;
 
         case 2:
@@ -44,15 +44,11 @@ export class StrategyWithdrawEvent {
     return message;
   }
 
-  accountKey: Uint8Array;
+  accountKey: string;
   amount: u64;
   totalAssets: u64;
 
-  constructor(
-    accountKey: Uint8Array = new Uint8Array(0),
-    amount: u64 = 0,
-    totalAssets: u64 = 0
-  ) {
+  constructor(accountKey: string = "", amount: u64 = 0, totalAssets: u64 = 0) {
     this.accountKey = accountKey;
     this.amount = amount;
     this.totalAssets = totalAssets;

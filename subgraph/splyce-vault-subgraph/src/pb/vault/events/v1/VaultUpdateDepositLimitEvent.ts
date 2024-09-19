@@ -7,7 +7,7 @@ import { Writer, Reader } from "as-proto/assembly";
 export class VaultUpdateDepositLimitEvent {
   static encode(message: VaultUpdateDepositLimitEvent, writer: Writer): void {
     writer.uint32(10);
-    writer.bytes(message.vaultIndex);
+    writer.string(message.vaultIndex);
 
     writer.uint32(16);
     writer.uint64(message.newLimit);
@@ -21,7 +21,7 @@ export class VaultUpdateDepositLimitEvent {
       const tag = reader.uint32();
       switch (tag >>> 3) {
         case 1:
-          message.vaultIndex = reader.bytes();
+          message.vaultIndex = reader.string();
           break;
 
         case 2:
@@ -37,10 +37,10 @@ export class VaultUpdateDepositLimitEvent {
     return message;
   }
 
-  vaultIndex: Uint8Array;
+  vaultIndex: string;
   newLimit: u64;
 
-  constructor(vaultIndex: Uint8Array = new Uint8Array(0), newLimit: u64 = 0) {
+  constructor(vaultIndex: string = "", newLimit: u64 = 0) {
     this.vaultIndex = vaultIndex;
     this.newLimit = newLimit;
   }
