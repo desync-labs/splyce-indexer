@@ -1,6 +1,6 @@
 import { BigDecimal, log, BigInt } from "@graphprotocol/graph-ts";
 import { Protobuf } from 'as-proto/assembly';
-import {Account, Deposit, Strategy, Token, Vault} from "../generated/schema";
+import {Account, Deposit, ShareAccount, Strategy, Token, TokenAccount, Vault, Withdrawal} from "../generated/schema";
 import { VaultEvent } from "./pb/vault/events/v1/VaultEvent";
 import { VaultInitEvent } from "./pb/vault/events/v1/VaultInitEvent";
 import { StrategyInitEvent } from "./pb/vault/events/v1/StrategyInitEvent";
@@ -38,6 +38,8 @@ export function handleTransactions(bytes: Uint8Array): void {
 
     }else if(vaultEvent.withdrwal != null){
         log.info("Withdrwal from vault {}",[vaultEvent.withdrwal!.vaultIndex.join("")]);
+        createWithdrawEntity(vaultEvent);
+
         let vault = Vault.load(vaultEvent.withdrwal!.vaultIndex.join(""));
         if(vault != null){
             vault.totalIdle = BigInt.fromU64(vaultEvent.withdrwal!.totalIdle);
@@ -70,22 +72,64 @@ export function handleTransactions(bytes: Uint8Array): void {
 
 function createDepositEntity(vaultEvent: VaultEvent): Deposit {
     
-    let account = Account.load(vaultEvent.vaultDeposit!.depositor.join(""));
-    if (account == null) {
-        account = new Account(vaultEvent.vaultDeposit!.depositor.join(""));
-        account.save();
-    }
+    updateAccountEntity(vaultEvent.vaultDeposit!.authority,
+                        vaultEvent.vaultDeposit!.tokenAccount,
+                        vaultEvent.vaultDeposit!.shareAccount);
 
     let deposit = new Deposit(vaultEvent.transactionHash);
     deposit.timestamp = BigInt.fromI64(vaultEvent.blockTimestamp);
     deposit.blockNumber = BigInt.fromI64(vaultEvent.blockHeight);
-    deposit.account = vaultEvent.vaultDeposit!.depositor.join("");
+    deposit.account = vaultEvent.vaultDeposit!.authority;
     deposit.vault = vaultEvent.vaultDeposit!.vaultIndex.join("");
     deposit.tokenAmount = BigInt.fromU64(vaultEvent.vaultDeposit!.amount);
     deposit.sharesMinted = BigInt.fromU64(vaultEvent.vaultDeposit!.share);
     deposit.save();
 
     return deposit
+}
+
+function createWithdrawEntity(vaultEvent: VaultEvent): Withdrawal {
+    
+    updateAccountEntity(vaultEvent.withdrwal!.authority,
+                        vaultEvent.withdrwal!.tokenAccount,
+                        vaultEvent.withdrwal!.shareAccount);
+
+    let withdrwal = new Withdrawal(vaultEvent.transactionHash);
+    withdrwal.timestamp = BigInt.fromI64(vaultEvent.blockTimestamp);
+    withdrwal.blockNumber = BigInt.fromI64(vaultEvent.blockHeight);
+    withdrwal.account = vaultEvent.withdrwal!.authority;
+    withdrwal.vault = vaultEvent.withdrwal!.vaultIndex.join("");
+    withdrwal.tokenAmount = BigInt.fromU64(vaultEvent.withdrwal!.assetsToTransfer);
+    withdrwal.sharesBurnt = BigInt.fromU64(vaultEvent.withdrwal!.sharesToBurn);
+
+    withdrwal.save();
+
+    return withdrwal
+}
+
+function updateAccountEntity(_authority: string, _tokenAccount: string, _shareAccount: string): void {
+
+    let authorityAccount = Account.load(_authority);
+    if (authorityAccount == null) {
+        authorityAccount = new Account(_authority);
+        authorityAccount.save();
+    }
+
+    let tokenAccount = TokenAccount.load(_tokenAccount);
+    if (tokenAccount == null) {
+        tokenAccount = new TokenAccount(_tokenAccount);
+        tokenAccount.authority = _authority;
+        tokenAccount.save();
+    }
+
+    let shareAccount = ShareAccount.load(_shareAccount);
+    if (shareAccount == null) {
+        shareAccount = new ShareAccount(_shareAccount);
+        shareAccount.authority = _authority;
+        shareAccount.save();
+    }
+
+    
 }
 
 function getOrCreateVaultEntity(vaultInitEvent: VaultInitEvent): Vault {

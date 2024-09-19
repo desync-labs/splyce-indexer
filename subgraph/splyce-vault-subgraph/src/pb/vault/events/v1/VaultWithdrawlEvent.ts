@@ -20,6 +20,15 @@ export class VaultWithdrawlEvent {
 
     writer.uint32(40);
     writer.uint64(message.sharesToBurn);
+
+    writer.uint32(50);
+    writer.string(message.tokenAccount);
+
+    writer.uint32(58);
+    writer.string(message.shareAccount);
+
+    writer.uint32(66);
+    writer.string(message.authority);
   }
 
   static decode(reader: Reader, length: i32): VaultWithdrawlEvent {
@@ -49,6 +58,18 @@ export class VaultWithdrawlEvent {
           message.sharesToBurn = reader.uint64();
           break;
 
+        case 6:
+          message.tokenAccount = reader.string();
+          break;
+
+        case 7:
+          message.shareAccount = reader.string();
+          break;
+
+        case 8:
+          message.authority = reader.string();
+          break;
+
         default:
           reader.skipType(tag & 7);
           break;
@@ -63,18 +84,27 @@ export class VaultWithdrawlEvent {
   totalShare: u64;
   assetsToTransfer: u64;
   sharesToBurn: u64;
+  tokenAccount: string;
+  shareAccount: string;
+  authority: string;
 
   constructor(
     vaultIndex: Uint8Array = new Uint8Array(0),
     totalIdle: u64 = 0,
     totalShare: u64 = 0,
     assetsToTransfer: u64 = 0,
-    sharesToBurn: u64 = 0
+    sharesToBurn: u64 = 0,
+    tokenAccount: string = "",
+    shareAccount: string = "",
+    authority: string = ""
   ) {
     this.vaultIndex = vaultIndex;
     this.totalIdle = totalIdle;
     this.totalShare = totalShare;
     this.assetsToTransfer = assetsToTransfer;
     this.sharesToBurn = sharesToBurn;
+    this.tokenAccount = tokenAccount;
+    this.shareAccount = shareAccount;
+    this.authority = authority;
   }
 }

@@ -28,11 +28,12 @@ type Vault @entity {
   apr: BigDecimal!
   "Strategies for this Vault"
   strategies: [Strategy!]! @derivedFrom(field: "vault")
-    "Token deposits into the Vault"
+  "Token deposits into the Vault"
   deposits: [Deposit!]! @derivedFrom(field: "vault")
+  "Token withdrawals from the Vault"
+  withdrawals: [Withdrawal!]! @derivedFrom(field: "vault")
   # "Strategy Ids for this vault"
   # strategyIds: [Strategy!]!
-
 }
 
 # enum StrategyType {
@@ -83,17 +84,57 @@ type Deposit @entity {
   # vaultUpdate: VaultUpdate!
 }
 
+type Withdrawal @entity {
+  "Transaction-Log"
+  id: ID!
+  "Timestamp of update"
+  timestamp: BigInt!
+  "Block number of update"
+  blockNumber: BigInt!
+  "Account making withdraw"
+  account: Account!
+  "Vault withdrawn from"
+  vault: Vault!
+  "Number of Tokens withdrawn from Vault"
+  tokenAmount: BigInt!
+  "Number of Vault Shares burnt"
+  sharesBurnt: BigInt!
+  # "Ethereum Transaction"
+  # transaction: Transaction!
+  # "Vault Update"
+  # vaultUpdate: VaultUpdate!
+}
+
+
 type Account @entity {
   "Account address"
   id: ID!
   "Vault deposits"
   deposits: [Deposit!]! @derivedFrom(field: "account")
-  # "Vault withdrawals"
-  # withdrawals: [Withdrawal!]! @derivedFrom(field: "account")
+  "Vault withdrawals"
+  withdrawals: [Withdrawal!]! @derivedFrom(field: "account")
+  "Token Account"
+  tokenAccount: [TokenAccount!]! @derivedFrom(field: "authority")
+  "Share Account"
+  shareAccount: [ShareAccount!]! @derivedFrom(field: "authority")
   # "Vault positions"
   # vaultPositions: [AccountVaultPosition!]! @derivedFrom(field: "account")
   # "Incoming share transfers"
   # sharesReceived: [Transfer!]! @derivedFrom(field: "to")
   # "Outgoing share transfers"
   # sharesSent: [Transfer!]! @derivedFrom(field: "from")
+}
+
+type ShareAccount @entity {
+  "Account address"
+  id: ID!
+  "Authority"
+  authority: Account!
+}
+
+type TokenAccount @entity {
+  "Account address"
+  id: ID!
+ "Authority"
+  authority: Account!
 }

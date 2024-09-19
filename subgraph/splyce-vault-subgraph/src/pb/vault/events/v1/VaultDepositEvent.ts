@@ -16,7 +16,13 @@ export class VaultDepositEvent {
     writer.uint64(message.share);
 
     writer.uint32(34);
-    writer.bytes(message.depositor);
+    writer.string(message.tokenAccount);
+
+    writer.uint32(42);
+    writer.string(message.shareAccount);
+
+    writer.uint32(50);
+    writer.string(message.authority);
   }
 
   static decode(reader: Reader, length: i32): VaultDepositEvent {
@@ -39,7 +45,15 @@ export class VaultDepositEvent {
           break;
 
         case 4:
-          message.depositor = reader.bytes();
+          message.tokenAccount = reader.string();
+          break;
+
+        case 5:
+          message.shareAccount = reader.string();
+          break;
+
+        case 6:
+          message.authority = reader.string();
           break;
 
         default:
@@ -54,17 +68,23 @@ export class VaultDepositEvent {
   vaultIndex: Uint8Array;
   amount: u64;
   share: u64;
-  depositor: Uint8Array;
+  tokenAccount: string;
+  shareAccount: string;
+  authority: string;
 
   constructor(
     vaultIndex: Uint8Array = new Uint8Array(0),
     amount: u64 = 0,
     share: u64 = 0,
-    depositor: Uint8Array = new Uint8Array(0)
+    tokenAccount: string = "",
+    shareAccount: string = "",
+    authority: string = ""
   ) {
     this.vaultIndex = vaultIndex;
     this.amount = amount;
     this.share = share;
-    this.depositor = depositor;
+    this.tokenAccount = tokenAccount;
+    this.shareAccount = shareAccount;
+    this.authority = authority;
   }
 }
