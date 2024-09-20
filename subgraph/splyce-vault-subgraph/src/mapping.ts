@@ -5,6 +5,9 @@ import { VaultEvent } from "./pb/vault/events/v1/VaultEvent";
 import { VaultInitEvent } from "./pb/vault/events/v1/VaultInitEvent";
 import { StrategyInitEvent } from "./pb/vault/events/v1/StrategyInitEvent";
 
+import * as vaultLibrary from './vault/vault';
+import { updateAccountEntity } from "./account/account";
+
 export function handleTransactions(bytes: Uint8Array): void {
     const vaultEvent: VaultEvent = Protobuf.decode<VaultEvent>(bytes, VaultEvent.decode);
 
@@ -26,16 +29,7 @@ export function handleTransactions(bytes: Uint8Array): void {
            }
         }
     }else if(vaultEvent.vaultDeposit != null){
-        log.info("Deposit to vault {}",[vaultEvent.vaultDeposit!.vaultIndex]);
-        createDepositEntity(vaultEvent);
-
-        let vault = Vault.load(vaultEvent.vaultDeposit!.vaultIndex);
-        if(vault != null){
-            vault.totalIdle = vault.totalIdle.plus(BigInt.fromU64(vaultEvent.vaultDeposit!.amount));
-            vault.totalShare = vault.totalShare.plus(BigInt.fromU64(vaultEvent.vaultDeposit!.share));
-            vault.save();
-        }
-
+        handleDeposit(vaultEvent);
     }else if(vaultEvent.withdrwal != null){
         log.info("Withdrwal from vault {}",[vaultEvent.withdrwal!.vaultIndex]);
         createWithdrawEntity(vaultEvent);
@@ -70,24 +64,6 @@ export function handleTransactions(bytes: Uint8Array): void {
     }    
 }
 
-function createDepositEntity(vaultEvent: VaultEvent): Deposit {
-    
-    updateAccountEntity(vaultEvent.vaultDeposit!.authority,
-                        vaultEvent.vaultDeposit!.tokenAccount,
-                        vaultEvent.vaultDeposit!.shareAccount);
-
-    let deposit = new Deposit(vaultEvent.transactionHash);
-    deposit.timestamp = BigInt.fromI64(vaultEvent.blockTimestamp);
-    deposit.blockNumber = BigInt.fromI64(vaultEvent.blockHeight);
-    deposit.account = vaultEvent.vaultDeposit!.authority;
-    deposit.vault = vaultEvent.vaultDeposit!.vaultIndex;
-    deposit.tokenAmount = BigInt.fromU64(vaultEvent.vaultDeposit!.amount);
-    deposit.sharesMinted = BigInt.fromU64(vaultEvent.vaultDeposit!.share);
-    deposit.save();
-
-    return deposit
-}
-
 function createWithdrawEntity(vaultEvent: VaultEvent): Withdrawal {
     
     updateAccountEntity(vaultEvent.withdrwal!.authority,
@@ -105,31 +81,6 @@ function createWithdrawEntity(vaultEvent: VaultEvent): Withdrawal {
     withdrwal.save();
 
     return withdrwal
-}
-
-function updateAccountEntity(_authority: string, _tokenAccount: string, _shareAccount: string): void {
-
-    let authorityAccount = Account.load(_authority);
-    if (authorityAccount == null) {
-        authorityAccount = new Account(_authority);
-        authorityAccount.save();
-    }
-
-    let tokenAccount = TokenAccount.load(_tokenAccount);
-    if (tokenAccount == null) {
-        tokenAccount = new TokenAccount(_tokenAccount);
-        tokenAccount.authority = _authority;
-        tokenAccount.save();
-    }
-
-    let shareAccount = ShareAccount.load(_shareAccount);
-    if (shareAccount == null) {
-        shareAccount = new ShareAccount(_shareAccount);
-        shareAccount.authority = _authority;
-        shareAccount.save();
-    }
-
-    
 }
 
 function getOrCreateVaultEntity(vaultInitEvent: VaultInitEvent): Vault {
@@ -183,4 +134,9 @@ function getOrCreateTokenEntity(vaultInitEvent: VaultInitEvent): Token {
     }
 
     return token as Token;
+}
+
+function handleDeposit(vaultEvent: VaultEvent): void {
+    log.info("Deposit to vault {}",[vaultEvent.vaultDeposit!.vaultIndex]);
+    vaultLibrary.deposit(vaultEvent);
 }
