@@ -32,6 +32,14 @@ type Vault @entity {
   deposits: [Deposit!]! @derivedFrom(field: "vault")
   "Token withdrawals from the Vault"
   withdrawals: [Withdrawal!]! @derivedFrom(field: "vault")
+  "Current supply of Shares"
+  sharesSupply: BigInt!
+  "Balance of Tokens in the Vault and its Strategies"
+  balanceTokens: BigInt!
+  "Current idle Token balance"
+  balanceTokensIdle: BigInt! # Tokens in the Vault contract
+
+
   # "Strategy Ids for this vault"
   # strategyIds: [Strategy!]!
 }
@@ -58,9 +66,15 @@ type Strategy @entity {
   depositPeriodEnds: BigInt!
   "Lock period ends"
   lockPeriodEnds: BigInt!
+  "The current debt the strategy has."
+  currentDebt: BigInt!
+  "The maximum debt the strategy is allowed to have."
+  maxDebt: BigInt!
+  "Annual Percentage Rate of the Strategy."
+  apr: BigDecimal!
+
   # "Vaults that this strategy is active"
   # activeOnVaults: [Vault!] @derivedFrom(field: "strategies")
-
 }
 
 type Deposit @entity {
