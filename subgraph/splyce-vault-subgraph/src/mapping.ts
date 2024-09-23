@@ -6,7 +6,7 @@ import { VaultInitEvent } from "./pb/vault/events/v1/VaultInitEvent";
 import { StrategyInitEvent } from "./pb/vault/events/v1/StrategyInitEvent";
 
 import * as vaultLibrary from './vault/vault';
-import { BIGINT_ZERO } from "./constants";
+import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "./constants";
 import * as strategyLiberary from './strategy/strategy';
 import { UpdatedCurrentDebtForStrategyEvent } from "./pb/vault/events/v1/UpdatedCurrentDebtForStrategyEvent";
 
@@ -14,7 +14,7 @@ export function handleTransactions(bytes: Uint8Array): void {
     const vaultEvent: VaultEvent = Protobuf.decode<VaultEvent>(bytes, VaultEvent.decode);
 
     if (vaultEvent.vaultInitialize !== null) {
-        getOrCreateVaultEntity(vaultEvent.vaultInitialize!)
+        handleVaultInit(vaultEvent.vaultInitialize!);
     }else if(vaultEvent.strategyInitialize != null){
         handleStrategyInit(vaultEvent);
     }else if(vaultEvent.strategyAdd != null){
@@ -48,42 +48,11 @@ export function handleTransactions(bytes: Uint8Array): void {
     }    
 }
 
-function getOrCreateVaultEntity(vaultInitEvent: VaultInitEvent): Vault {
+
+function handleVaultInit(vaultInitEvent: VaultInitEvent): void {
+   
     log.info("Initializing vault: {}", [vaultInitEvent.vaultIndex]);
-    let vault = Vault.load(vaultInitEvent.vaultIndex);
-    if (vault == null) {
-        vault = new Vault(vaultInitEvent.vaultIndex);
-        vault.depositLimit = BigInt.fromU64(vaultInitEvent.depositLimit);
-        vault.shutdown = false;
-        vault.totalDebt =    BIGINT_ZERO;
-        vault.totalIdle = BIGINT_ZERO;
-        vault.totalShare = BIGINT_ZERO;
-        vault.apr  =   BigDecimal.fromString("0");
-        // vault.strategyIds = [];
-        
-        //Create token entity
-        vault.token  =  getOrCreateTokenEntity(vaultInitEvent).id;
-
-        vault.balanceTokens = BIGINT_ZERO;
-        vault.balanceTokensIdle = BIGINT_ZERO;
-        vault.sharesSupply = BIGINT_ZERO;
-    
-        vault.save();
-    }
-    return vault as Vault;
-}
-
-function getOrCreateTokenEntity(vaultInitEvent: VaultInitEvent): Token {
-    let token = Token.load(vaultInitEvent.underlyingMint);
-    if (token == null) {
-        token = new Token(vaultInitEvent.underlyingMint);
-        token.decimals = vaultInitEvent.underlyingDecimals;
-        token.symbol = ""; //TODO: Get symbol from mint
-        token.name = "";   //TODO: Get name from mint 
-        token.save();
-    }
-
-    return token as Token;
+    vaultLibrary.createVaultEntity(vaultInitEvent);
 }
 
 function handleDeposit(vaultEvent: VaultEvent): void {

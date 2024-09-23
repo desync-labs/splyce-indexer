@@ -1,6 +1,6 @@
 import { BigInt, log } from "@graphprotocol/graph-ts";
 import { Strategy } from "../../generated/schema";
-import { BIGINT_ZERO } from "../constants";
+import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
 import { StrategyInitEvent } from "../pb/vault/events/v1/StrategyInitEvent";
 import { VaultAddStrategyEvent } from "../pb/vault/events/v1/VaultAddStrategyEvent";
 import { UpdatedCurrentDebtForStrategyEvent } from "../pb/vault/events/v1/UpdatedCurrentDebtForStrategyEvent";
@@ -21,6 +21,9 @@ export function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitE
         strategy.currentDebt = BIGINT_ZERO
         strategy.maxDebt = BIGINT_ZERO
 
+        //TODO: Will be updated with report processing logic
+        strategy.apr = BIGDECIMAL_ZERO;
+        
         strategy.vault = strategyInitializeEvent.vault;
 
         strategy.save()

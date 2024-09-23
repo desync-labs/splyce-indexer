@@ -1,10 +1,50 @@
 import { BigInt, log } from "@graphprotocol/graph-ts";
-import { Deposit, Vault, Withdrawal } from "../../generated/schema";
+import { Deposit, Token, Vault, Withdrawal } from "../../generated/schema";
 import { VaultEvent } from "../pb/vault/events/v1/VaultEvent";
 
 import * as accountLibrary from '../account/account';
 import * as vaultPosition from './vault-position';
+import { VaultInitEvent } from "../pb/vault/events/v1/VaultInitEvent";
+import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
 
+export function createVaultEntity(vaultInitEvent: VaultInitEvent): void {
+    let vault = Vault.load(vaultInitEvent.vaultIndex);
+    if (vault == null) {
+        vault = new Vault(vaultInitEvent.vaultIndex);
+        vault.depositLimit = BigInt.fromU64(vaultInitEvent.depositLimit);
+        vault.shutdown = false;
+        vault.totalDebt =    BIGINT_ZERO;
+        vault.totalIdle = BIGINT_ZERO;
+        vault.totalShare = BIGINT_ZERO;
+
+        //TODO: Will be updated with report processing logic
+        vault.apr  =   BIGDECIMAL_ZERO;
+        // vault.strategyIds = [];
+        
+        //Create token entity
+        vault.token  =  getOrCreateTokenEntity(vaultInitEvent).id;
+
+        vault.balanceTokens = BIGINT_ZERO;
+        vault.balanceTokensIdle = BIGINT_ZERO;
+        vault.sharesSupply = BIGINT_ZERO;
+    
+        vault.save();
+    }
+}
+
+//TODO: Move this to token library
+function getOrCreateTokenEntity(vaultInitEvent: VaultInitEvent): Token {
+    let token = Token.load(vaultInitEvent.underlyingMint);
+    if (token == null) {
+        token = new Token(vaultInitEvent.underlyingMint);
+        token.decimals = vaultInitEvent.underlyingDecimals;
+        token.symbol = ""; //TODO: Get symbol from mint
+        token.name = "";   //TODO: Get name from mint 
+        token.save();
+    }
+
+    return token as Token;
+}
 
 export function deposit(vaultEvent: VaultEvent): void{
 
