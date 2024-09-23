@@ -37,11 +37,14 @@ message VaultAddStrategyEvent {
 
 message VaultDepositEvent {
   string vault_index = 1;
-  uint64 amount = 2;
-  uint64 share = 3;
-  string token_account = 4;
-  string share_account = 5;
-  string authority = 6;
+  uint64 total_debt = 2;
+  uint64 total_idle = 3;
+  uint64 total_share = 4;
+  uint64 amount = 5;
+  uint64 share = 6;
+  string token_account = 7;
+  string share_account = 8;
+  string authority = 9;
 }
 
 

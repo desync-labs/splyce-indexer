@@ -62,14 +62,20 @@ pub struct VaultDepositEvent {
     #[prost(string, tag="1")]
     pub vault_index: ::prost::alloc::string::String,
     #[prost(uint64, tag="2")]
-    pub amount: u64,
+    pub total_debt: u64,
     #[prost(uint64, tag="3")]
+    pub total_idle: u64,
+    #[prost(uint64, tag="4")]
+    pub total_share: u64,
+    #[prost(uint64, tag="5")]
+    pub amount: u64,
+    #[prost(uint64, tag="6")]
     pub share: u64,
-    #[prost(string, tag="4")]
+    #[prost(string, tag="7")]
     pub token_account: ::prost::alloc::string::String,
-    #[prost(string, tag="5")]
+    #[prost(string, tag="8")]
     pub share_account: ::prost::alloc::string::String,
-    #[prost(string, tag="6")]
+    #[prost(string, tag="9")]
     pub authority: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]

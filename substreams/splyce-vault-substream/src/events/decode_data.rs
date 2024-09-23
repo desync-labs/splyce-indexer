@@ -74,6 +74,9 @@ impl DecodeVaultData for VaultDepositEvent {
     
         let deposit_event: VaultDepositEvent = VaultDepositEvent{
             vault_index: bs58::encode(event.vault_index).into_string(),
+            total_debt: event.total_debt,
+            total_idle: event.total_idle,
+            total_share: event.total_share,
             amount: event.amount,
             share: event.share,
             token_account: bs58::encode(event.token_account).into_string(),
