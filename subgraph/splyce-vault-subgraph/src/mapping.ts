@@ -1,6 +1,6 @@
 import { BigDecimal, log, BigInt } from "@graphprotocol/graph-ts";
 import { Protobuf } from 'as-proto/assembly';
-import {Account, Deposit, ShareAccount, Strategy, Token, TokenAccount, Vault, Withdrawal} from "../generated/schema";
+import {Strategy, Token, Vault, Withdrawal} from "../generated/schema";
 import { VaultEvent } from "./pb/vault/events/v1/VaultEvent";
 import { VaultInitEvent } from "./pb/vault/events/v1/VaultInitEvent";
 import { StrategyInitEvent } from "./pb/vault/events/v1/StrategyInitEvent";

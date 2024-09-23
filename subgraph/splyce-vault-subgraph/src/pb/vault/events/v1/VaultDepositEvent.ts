@@ -10,18 +10,27 @@ export class VaultDepositEvent {
     writer.string(message.vaultIndex);
 
     writer.uint32(16);
-    writer.uint64(message.amount);
+    writer.uint64(message.totalDebt);
 
     writer.uint32(24);
+    writer.uint64(message.totalIdle);
+
+    writer.uint32(32);
+    writer.uint64(message.totalShare);
+
+    writer.uint32(40);
+    writer.uint64(message.amount);
+
+    writer.uint32(48);
     writer.uint64(message.share);
 
-    writer.uint32(34);
+    writer.uint32(58);
     writer.string(message.tokenAccount);
 
-    writer.uint32(42);
+    writer.uint32(66);
     writer.string(message.shareAccount);
 
-    writer.uint32(50);
+    writer.uint32(74);
     writer.string(message.authority);
   }
 
@@ -37,22 +46,34 @@ export class VaultDepositEvent {
           break;
 
         case 2:
-          message.amount = reader.uint64();
+          message.totalDebt = reader.uint64();
           break;
 
         case 3:
-          message.share = reader.uint64();
+          message.totalIdle = reader.uint64();
           break;
 
         case 4:
-          message.tokenAccount = reader.string();
+          message.totalShare = reader.uint64();
           break;
 
         case 5:
-          message.shareAccount = reader.string();
+          message.amount = reader.uint64();
           break;
 
         case 6:
+          message.share = reader.uint64();
+          break;
+
+        case 7:
+          message.tokenAccount = reader.string();
+          break;
+
+        case 8:
+          message.shareAccount = reader.string();
+          break;
+
+        case 9:
           message.authority = reader.string();
           break;
 
@@ -66,6 +87,9 @@ export class VaultDepositEvent {
   }
 
   vaultIndex: string;
+  totalDebt: u64;
+  totalIdle: u64;
+  totalShare: u64;
   amount: u64;
   share: u64;
   tokenAccount: string;
@@ -74,6 +98,9 @@ export class VaultDepositEvent {
 
   constructor(
     vaultIndex: string = "",
+    totalDebt: u64 = 0,
+    totalIdle: u64 = 0,
+    totalShare: u64 = 0,
     amount: u64 = 0,
     share: u64 = 0,
     tokenAccount: string = "",
@@ -81,6 +108,9 @@ export class VaultDepositEvent {
     authority: string = ""
   ) {
     this.vaultIndex = vaultIndex;
+    this.totalDebt = totalDebt;
+    this.totalIdle = totalIdle;
+    this.totalShare = totalShare;
     this.amount = amount;
     this.share = share;
     this.tokenAccount = tokenAccount;

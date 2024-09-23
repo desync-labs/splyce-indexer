@@ -13,7 +13,7 @@ type Vault @entity {
   "Vault address"
   id: ID!
   "Token this Vault will accrue"
-  token: Token!
+  token: Token! 
   "The maximum amount of tokens that can be deposited in this Vault"
   depositLimit: BigInt!
   "Is vault in shutdown"
@@ -114,27 +114,59 @@ type Account @entity {
   "Vault withdrawals"
   withdrawals: [Withdrawal!]! @derivedFrom(field: "account")
   "Token Account"
-  tokenAccount: [TokenAccount!]! @derivedFrom(field: "authority")
+  tokenAccount: [TokenWallet!]! @derivedFrom(field: "authority")
   "Share Account"
-  shareAccount: [ShareAccount!]! @derivedFrom(field: "authority")
-  # "Vault positions"
-  # vaultPositions: [AccountVaultPosition!]! @derivedFrom(field: "account")
+  shareAccount: [TokenWallet!]! @derivedFrom(field: "authority")
+  "Vault positions"
+  vaultPositions: [AccountVaultPosition!]! @derivedFrom(field: "account")
   # "Incoming share transfers"
   # sharesReceived: [Transfer!]! @derivedFrom(field: "to")
   # "Outgoing share transfers"
   # sharesSent: [Transfer!]! @derivedFrom(field: "from")
 }
 
-type ShareAccount @entity {
-  "Account address"
-  id: ID!
-  "Authority"
-  authority: Account!
-}
+# type ShareAccount @entity {
+#   "Account address"
+#   id: ID!
+#   "Authority"
+#   authority: Account!
+#   # "Mint"
+#   # mint: Token!
+# }
 
-type TokenAccount @entity {
+#This is like a wallet ... which holds the tokens
+type TokenWallet @entity {
   "Account address"
   id: ID!
  "Authority"
   authority: Account!
+  # "Mint"
+  # mint: Token!
+}
+
+type AccountVaultPosition @entity {
+  "Account-Vault"
+  id: ID!
+  "Vault"
+  vault: Vault!
+  "Account"
+  account: Account!
+  "Vault token"
+  token: Token!
+  # "Vault share token"
+  # shareToken: Token!
+  # "Created in transaction"
+  # transaction: Transaction!
+  # "Latest account update for this Vault"
+  # latestUpdate: AccountVaultPositionUpdate!
+  # "Account updates over time"
+  # updates: [AccountVaultPositionUpdate!]! @derivedFrom(field: "accountVaultPosition")
+  "Share balance"
+  balanceShares: BigInt!
+  "The current balance of tokens defined as: sum(deposits) - sum(withdrawals) + sum(received transfers) - sum(sent transfers)."
+  balanceTokens: BigInt!
+  "The current balance position defined as: (vault.balanceOf(account) * (vault.pricePerShare() / 10**vault.decimals()))."
+  balancePosition: BigInt!
+  "The accumulated profit balance for the account/vault. It is only calculated when the user withdraws all the shares."
+  balanceProfit: BigInt!
 }

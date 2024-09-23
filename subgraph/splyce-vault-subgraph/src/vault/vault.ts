@@ -1,11 +1,24 @@
-import { BigInt } from "@graphprotocol/graph-ts";
+import { BigInt, log } from "@graphprotocol/graph-ts";
 import { Deposit, Vault } from "../../generated/schema";
 import { VaultEvent } from "../pb/vault/events/v1/VaultEvent";
 
 import * as accountLibrary from '../account/account';
+import * as vaultPosition from './vault-position';
+
 
 export function deposit(vaultEvent: VaultEvent): void{
-    accountLibrary.updateAccountEntity(vaultEvent.vaultDeposit!.authority,
+
+    log.info(
+        '[Vault] Deposit vault: {} receiver: {} depositAmount: {} sharesMinted: {}',
+        [
+          vaultEvent.vaultDeposit!.vaultIndex,
+          vaultEvent.vaultDeposit!.authority,
+          vaultEvent.vaultDeposit!.amount.toString(),
+          vaultEvent.vaultDeposit!.share.toString(),
+        ]
+      );
+
+    let account = accountLibrary.updateAccountEntity(vaultEvent.vaultDeposit!.authority,
                         vaultEvent.vaultDeposit!.tokenAccount,
                         vaultEvent.vaultDeposit!.shareAccount);
 
@@ -20,9 +33,24 @@ export function deposit(vaultEvent: VaultEvent): void{
 
     let vault = Vault.load(vaultEvent.vaultDeposit!.vaultIndex);
     if(vault != null){
-        vault.totalIdle = vault.totalIdle.plus(BigInt.fromU64(vaultEvent.vaultDeposit!.amount));
-        vault.totalShare = vault.totalShare.plus(BigInt.fromU64(vaultEvent.vaultDeposit!.share));
+        vault.totalDebt = BigInt.fromU64(vaultEvent.vaultDeposit!.totalDebt);
+        vault.totalIdle = BigInt.fromU64(vaultEvent.vaultDeposit!.amount);
+        vault.totalShare = BigInt.fromU64(vaultEvent.vaultDeposit!.share);
         vault.save();
+
+        vaultPosition.deposit(
+            account,
+            vault,
+            vaultEvent.transactionHash,
+            deposit.tokenAmount,
+            deposit.sharesMinted,
+            vault.totalShare,
+            vault.totalDebt,
+            vault.totalIdle,
+            vault.totalShare
+        )
     }
+
+    
 
 }
