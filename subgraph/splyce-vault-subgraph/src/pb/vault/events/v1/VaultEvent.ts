@@ -11,6 +11,7 @@ import { VaultUpdateDepositLimitEvent } from "./VaultUpdateDepositLimitEvent";
 import { StrategyInitEvent } from "./StrategyInitEvent";
 import { StrategyDepositEvent } from "./StrategyDepositEvent";
 import { StrategyWithdrawEvent } from "./StrategyWithdrawEvent";
+import { UpdatedCurrentDebtForStrategyEvent } from "./UpdatedCurrentDebtForStrategyEvent";
 
 export class VaultEvent {
   static encode(message: VaultEvent, writer: Writer): void {
@@ -75,6 +76,14 @@ export class VaultEvent {
       writer.uint32(66);
       writer.fork();
       StrategyWithdrawEvent.encode(strategyWithdraw, writer);
+      writer.ldelim();
+    }
+
+    const updatedDebtForStrategy = message.updatedDebtForStrategy;
+    if (updatedDebtForStrategy !== null) {
+      writer.uint32(74);
+      writer.fork();
+      UpdatedCurrentDebtForStrategyEvent.encode(updatedDebtForStrategy, writer);
       writer.ldelim();
     }
 
@@ -151,6 +160,11 @@ export class VaultEvent {
           );
           break;
 
+        case 9:
+          message.updatedDebtForStrategy =
+            UpdatedCurrentDebtForStrategyEvent.decode(reader, reader.uint32());
+          break;
+
         case 1000:
           message.transactionHash = reader.string();
           break;
@@ -180,6 +194,7 @@ export class VaultEvent {
   strategyInitialize: StrategyInitEvent | null;
   strategyDeposit: StrategyDepositEvent | null;
   strategyWithdraw: StrategyWithdrawEvent | null;
+  updatedDebtForStrategy: UpdatedCurrentDebtForStrategyEvent | null;
   transactionHash: string;
   blockHeight: u64;
   blockTimestamp: i64;
@@ -193,6 +208,7 @@ export class VaultEvent {
     strategyInitialize: StrategyInitEvent | null = null,
     strategyDeposit: StrategyDepositEvent | null = null,
     strategyWithdraw: StrategyWithdrawEvent | null = null,
+    updatedDebtForStrategy: UpdatedCurrentDebtForStrategyEvent | null = null,
     transactionHash: string = "",
     blockHeight: u64 = 0,
     blockTimestamp: i64 = 0
@@ -205,6 +221,7 @@ export class VaultEvent {
     this.strategyInitialize = strategyInitialize;
     this.strategyDeposit = strategyDeposit;
     this.strategyWithdraw = strategyWithdraw;
+    this.updatedDebtForStrategy = updatedDebtForStrategy;
     this.transactionHash = transactionHash;
     this.blockHeight = blockHeight;
     this.blockTimestamp = blockTimestamp;

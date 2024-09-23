@@ -95,6 +95,18 @@ function createWithdrawEntity(vaultEvent: VaultEvent): Withdrawal {
     return withdrwal
 }
 
+export function updateDebt(vaultId: string,
+                            totalDebt: number,
+                            totalIdle: number,
+): void {
+    let vault = Vault.load(vaultId);
+    if(vault != null){
+        vault.totalDebt = BigInt.fromU64(totalDebt);
+        vault.totalIdle = BigInt.fromU64(totalIdle);
+        vault.save();
+    }
+}
+
 
 
 

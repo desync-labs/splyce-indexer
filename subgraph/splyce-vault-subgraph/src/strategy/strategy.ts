@@ -3,6 +3,9 @@ import { Strategy } from "../../generated/schema";
 import { BIGINT_ZERO } from "../constants";
 import { StrategyInitEvent } from "../pb/vault/events/v1/StrategyInitEvent";
 import { VaultAddStrategyEvent } from "../pb/vault/events/v1/VaultAddStrategyEvent";
+import { UpdatedCurrentDebtForStrategyEvent } from "../pb/vault/events/v1/UpdatedCurrentDebtForStrategyEvent";
+
+import * as vaultLibrary from '../vault/vault';
 
 export function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitEvent): Strategy {
     let strategy = Strategy.load(strategyInitializeEvent.accountKey);
@@ -36,3 +39,15 @@ export function addStrategyToVault(strategyInitializeEvent: VaultAddStrategyEven
         strategy.save();
     }
 }
+export function updateCurrentDebt(strategyDebtUpdateEvent: UpdatedCurrentDebtForStrategyEvent, vaultIndex: string): void {
+    let strategy = Strategy.load(strategyDebtUpdateEvent.strategyKey);
+    if(strategy != null){
+        strategy.currentDebt = BigInt.fromU64(strategyDebtUpdateEvent.newDebt);
+        strategy.save();
+    }
+
+    vaultLibrary.updateDebt(vaultIndex,
+                            strategyDebtUpdateEvent.totalDebt, 
+                            strategyDebtUpdateEvent.totalIdle);
+}
+

@@ -8,6 +8,7 @@ import { StrategyInitEvent } from "./pb/vault/events/v1/StrategyInitEvent";
 import * as vaultLibrary from './vault/vault';
 import { BIGINT_ZERO } from "./constants";
 import * as strategyLiberary from './strategy/strategy';
+import { UpdatedCurrentDebtForStrategyEvent } from "./pb/vault/events/v1/UpdatedCurrentDebtForStrategyEvent";
 
 export function handleTransactions(bytes: Uint8Array): void {
     const vaultEvent: VaultEvent = Protobuf.decode<VaultEvent>(bytes, VaultEvent.decode);
@@ -103,4 +104,13 @@ function handleStrategyInit(vaultEvent: VaultEvent): void {
 function handleStrategyAdd(vaultEvent: VaultEvent): void {
     log.info("Add strategy to vault {}",[vaultEvent.strategyAdd!.strategyKey]);
     strategyLiberary.addStrategyToVault(vaultEvent.strategyAdd!, vaultEvent.strategyAdd!.vaultIndex);
+}
+
+function handleCurrentDebtUpdate(vaultEvent: VaultEvent): void {
+    log.info("Add current debt for vault{} strategy {}",
+                [vaultEvent.updatedDebtForStrategy!.vaultIndex,
+                vaultEvent.updatedDebtForStrategy!.strategyKey
+    ]);
+
+    strategyLiberary.updateCurrentDebt(vaultEvent.updatedDebtForStrategy!, vaultEvent.updatedDebtForStrategy!.vaultIndex);
 }

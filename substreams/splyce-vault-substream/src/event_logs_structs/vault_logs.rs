@@ -22,6 +22,15 @@ pub struct VaultAddStrategyLog {
 }
 
 #[derive(Debug, AnchorDeserialize, AnchorSerialize)]
+pub struct UpdatedCurrentDebtForStrategyLog {
+  pub vault_index: [u8; 8],
+  pub strategy_key: Pubkey,
+  pub total_idle: u64,
+  pub total_debt: u64,
+  pub new_debt: u64,
+}
+
+#[derive(Debug, AnchorDeserialize, AnchorSerialize)]
 pub struct VaultDepositLog {
     pub vault_index: [u8; 8],
     pub total_debt: u64,
