@@ -7,7 +7,7 @@ import * as vaultPosition from './vault-position';
 import { VaultInitEvent } from "../pb/vault/events/v1/VaultInitEvent";
 import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "../constants";
 
-export function createVaultEntity(vaultInitEvent: VaultInitEvent): void {
+export function createVaultEntity(vaultInitEvent: VaultInitEvent, blockTimestamp:i64): void {
     let vault = Vault.load(vaultInitEvent.vaultIndex);
     if (vault == null) {
         vault = new Vault(vaultInitEvent.vaultIndex);
@@ -27,6 +27,8 @@ export function createVaultEntity(vaultInitEvent: VaultInitEvent): void {
         vault.balanceTokens = BIGINT_ZERO;
         vault.balanceTokensIdle = BIGINT_ZERO;
         vault.sharesSupply = BIGINT_ZERO;
+
+        vault.activation = BigInt.fromI64(blockTimestamp);
     
         vault.save();
     }

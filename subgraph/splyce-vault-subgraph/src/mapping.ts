@@ -14,7 +14,7 @@ export function handleTransactions(bytes: Uint8Array): void {
     const vaultEvent: VaultEvent = Protobuf.decode<VaultEvent>(bytes, VaultEvent.decode);
 
     if (vaultEvent.vaultInitialize !== null) {
-        handleVaultInit(vaultEvent.vaultInitialize!);
+        handleVaultInit(vaultEvent.vaultInitialize!, vaultEvent.blockTimestamp);
     }else if(vaultEvent.strategyInitialize != null){
         handleStrategyInit(vaultEvent);
     }else if(vaultEvent.strategyAdd != null){
@@ -49,10 +49,10 @@ export function handleTransactions(bytes: Uint8Array): void {
 }
 
 
-function handleVaultInit(vaultInitEvent: VaultInitEvent): void {
+function handleVaultInit(vaultInitEvent: VaultInitEvent, blockTimestamp: i64): void {
    
     log.info("Initializing vault: {}", [vaultInitEvent.vaultIndex]);
-    vaultLibrary.createVaultEntity(vaultInitEvent);
+    vaultLibrary.createVaultEntity(vaultInitEvent,blockTimestamp);
 }
 
 function handleDeposit(vaultEvent: VaultEvent): void {
@@ -61,7 +61,7 @@ function handleDeposit(vaultEvent: VaultEvent): void {
 }
 
 function handleWithdraw(vaultEvent: VaultEvent): void {
-    log.info("Handle withdrawal {}",[vaultEvent.vaultDeposit!.vaultIndex]);
+    log.info("Handle withdrawal {}",[vaultEvent.withdrwal!.vaultIndex]);
     vaultLibrary.withdraw(vaultEvent);
 }
 
@@ -72,7 +72,7 @@ function handleStrategyInit(vaultEvent: VaultEvent): void {
 
 function handleStrategyAdd(vaultEvent: VaultEvent): void {
     log.info("Add strategy to vault {}",[vaultEvent.strategyAdd!.strategyKey]);
-    strategyLiberary.addStrategyToVault(vaultEvent.strategyAdd!, vaultEvent.strategyAdd!.vaultIndex);
+    strategyLiberary.addStrategyToVault(vaultEvent.strategyAdd!, vaultEvent.strategyAdd!.vaultIndex, vaultEvent.blockTimestamp);
 }
 
 function handleCurrentDebtUpdate(vaultEvent: VaultEvent): void {

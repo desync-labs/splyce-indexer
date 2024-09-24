@@ -38,7 +38,8 @@ type Vault @entity {
   balanceTokens: BigInt!
   "Current idle Token balance"
   balanceTokensIdle: BigInt! # Tokens in the Vault contract
-
+  "Creation timestamp"
+  activation: BigInt!
 
   # "Strategy Ids for this vault"
   # strategyIds: [Strategy!]!
@@ -72,7 +73,10 @@ type Strategy @entity {
   maxDebt: BigInt!
   "Annual Percentage Rate of the Strategy."
   apr: BigDecimal!
-
+  "Creation timestamp"
+  activation: BigInt!
+    "The amount of assets this strategy manages that should not be included in Yearn's Total Value Locked (TVL) calculation across it's ecosystem."
+  delegatedAssets: BigInt
   # "Vaults that this strategy is active"
   # activeOnVaults: [Vault!] @derivedFrom(field: "strategies")
 }

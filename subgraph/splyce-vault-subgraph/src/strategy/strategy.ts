@@ -23,8 +23,10 @@ export function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitE
 
         //TODO: Will be updated with report processing logic
         strategy.apr = BIGDECIMAL_ZERO;
-        
+
         strategy.vault = strategyInitializeEvent.vault;
+        strategy.delegatedAssets = BIGINT_ZERO;
+        strategy.activation = BIGINT_ZERO;
 
         strategy.save()
     }
@@ -32,13 +34,14 @@ export function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitE
     return strategy as Strategy;
 }
 
-export function addStrategyToVault(strategyInitializeEvent: VaultAddStrategyEvent, vaultId: string): void {
+export function addStrategyToVault(strategyInitializeEvent: VaultAddStrategyEvent, vaultId: string, blockTimestamp:i64): void {
     let strategy = Strategy.load(strategyInitializeEvent.strategyKey); 
     if(strategy != null){
         log.info("Strategy {} added to vault {1}",[strategy.id,vaultId]);
         strategy.maxDebt = BigInt.fromU64(strategyInitializeEvent.maxDebt);
         strategy.currentDebt = BigInt.fromU64(strategyInitializeEvent.currentDebt);
         strategy.vault = vaultId;
+        strategy.activation = BigInt.fromI64(blockTimestamp);
         strategy.save();
     }
 }
