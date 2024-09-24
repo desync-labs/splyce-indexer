@@ -2,7 +2,7 @@ use std::vec;
 use substreams::log;
 use std::error::Error;
 
-use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrategyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent, UpdatedCurrentDebtForStrategyEvent}}, utils::utils::read_descriminator};
+use crate::{events::decode_data::DecodeVaultData, pb::{sol::transactions::v1::Transactions, vault::events::v1::{vault_event, StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrategyEvent, VaultDepositEvent, VaultEvent, VaultEventLogs, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent, UpdatedCurrentDebtForStrategyEvent, StrategyReportedEvent}}, utils::utils::read_descriminator};
 
 #[substreams::handlers::map]
 fn filtered_event_logs(
@@ -163,7 +163,18 @@ fn decode_and_parse(log: &Vec<u8>) -> VaultEvent{
                 log::info!("Failed to decode strategy debt update event data: {}", e);
             }
         }
+    }else if StrategyReportedEvent::descriminator() == disc{
+        match decode_and_parse_to_protobuf::<StrategyReportedEvent>(&mut slice) {
+            Ok(parsed_event) => {
+                vault_event.event = Some(vault_event::Event::StrategyReported(parsed_event))
+            },
+            Err(e) => {
+                log::info!("Failed to decode strategy debt update event data: {}", e);
+            }
+        }
     }
+
+    //
 
     vault_event
 }

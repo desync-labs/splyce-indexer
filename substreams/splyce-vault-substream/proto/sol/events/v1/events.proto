@@ -85,6 +85,16 @@ message UpdatedCurrentDebtForStrategyEvent {
   uint64 new_debt = 5;
 }
 
+message StrategyReportedEvent {
+  string strategy_key = 1;
+  uint64 gain = 2;
+  uint64 loss = 3;
+  uint64 current_debt = 4;
+  uint64 protocol_fees = 5;
+  uint64 total_fees = 6;
+  int64 timestamp = 7;
+}
+
 message VaultEvent {
   oneof event {
     VaultInitEvent vaultInitialize = 1;
@@ -96,6 +106,7 @@ message VaultEvent {
     StrategyDepositEvent strategyDeposit = 7;
     StrategyWithdrawEvent strategyWithdraw = 8;
     UpdatedCurrentDebtForStrategyEvent updatedDebtForStrategy = 9;
+    StrategyReportedEvent strategyReported = 10;
   }
   string transaction_hash = 1000;
   uint64 block_height = 1001;
