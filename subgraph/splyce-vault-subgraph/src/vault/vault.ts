@@ -138,8 +138,8 @@ function createWithdrawEntity(vaultEvent: VaultEvent): Withdrawal {
 }
 
 export function updateDebt(vaultId: string,
-                            totalDebt: number,
-                            totalIdle: number,
+                            totalDebt: u64,
+                            totalIdle: u64,
 ): void {
     let vault = Vault.load(vaultId);
     if(vault != null){

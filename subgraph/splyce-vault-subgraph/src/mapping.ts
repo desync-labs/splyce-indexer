@@ -9,6 +9,7 @@ import * as vaultLibrary from './vault/vault';
 import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "./constants";
 import * as strategyLiberary from './strategy/strategy';
 import { UpdatedCurrentDebtForStrategyEvent } from "./pb/vault/events/v1/UpdatedCurrentDebtForStrategyEvent";
+import { StrategyReportedEvent } from "./pb/vault/events/v1/StrategyReportedEvent";
 
 export function handleTransactions(bytes: Uint8Array): void {
     const vaultEvent: VaultEvent = Protobuf.decode<VaultEvent>(bytes, VaultEvent.decode);
@@ -45,7 +46,19 @@ export function handleTransactions(bytes: Uint8Array): void {
             strategy.totalAssets = strategy.totalAssets.minus(BigInt.fromU64(vaultEvent.strategyWithdraw!.totalAssets));
             strategy.save();
         }
-    }    
+    }else if(vaultEvent.updatedDebtForStrategy != null){
+        log.info("Updated debt for  strategy {}",[vaultEvent.updatedDebtForStrategy!.strategyKey]);
+        handleCurrentDebtUpdate(vaultEvent.updatedDebtForStrategy!);
+    }
+    else if(vaultEvent.strategyReported != null){
+        log.info('[Vault mappings] Handle strategy reported', []);
+        handleStrategyReported(vaultEvent.strategyReported!,
+                                vaultEvent.transactionHash,
+                                vaultEvent.blockHeight,
+                                vaultEvent.blockTimestamp
+                            );
+    }   
+
 }
 
 
@@ -75,11 +88,27 @@ function handleStrategyAdd(vaultEvent: VaultEvent): void {
     strategyLiberary.addStrategyToVault(vaultEvent.strategyAdd!, vaultEvent.strategyAdd!.vaultIndex, vaultEvent.blockTimestamp);
 }
 
-function handleCurrentDebtUpdate(vaultEvent: VaultEvent): void {
+function handleCurrentDebtUpdate(updatedDebtForStrategyEvent: UpdatedCurrentDebtForStrategyEvent): void {
     log.info("Add current debt for vault{} strategy {}",
-                [vaultEvent.updatedDebtForStrategy!.vaultIndex,
-                vaultEvent.updatedDebtForStrategy!.strategyKey
+                [updatedDebtForStrategyEvent.vaultIndex,
+                    updatedDebtForStrategyEvent.strategyKey
     ]);
 
-    strategyLiberary.updateCurrentDebt(vaultEvent.updatedDebtForStrategy!, vaultEvent.updatedDebtForStrategy!.vaultIndex);
+    strategyLiberary.updateCurrentDebt(updatedDebtForStrategyEvent);
+}
+
+export function handleStrategyReported(strategyReportedEvent: StrategyReportedEvent,txHash: string, blockNumber: u64, timestamp:i64): void {
+    log.info('[Vault mappings] Handle strategy reported', []);
+    strategyLiberary.createReport(
+        txHash,
+        strategyReportedEvent.strategyKey,
+        BigInt.fromU64(strategyReportedEvent.gain),
+        BigInt.fromU64(strategyReportedEvent.loss),
+        BigInt.fromU64(strategyReportedEvent.currentDebt),
+        BigInt.fromU64(strategyReportedEvent.protocolFees),
+        BigInt.fromU64(strategyReportedEvent.totalFees),
+        BigInt.fromU64(blockNumber),
+        BigInt.fromI64(timestamp)
+    );
+
 }
