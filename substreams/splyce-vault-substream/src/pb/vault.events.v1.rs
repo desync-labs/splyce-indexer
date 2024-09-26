@@ -13,9 +13,15 @@ pub struct VaultInitEvent {
     pub underlying_token_acc: ::prost::alloc::string::String,
     #[prost(uint32, tag="4")]
     pub underlying_decimals: u32,
-    #[prost(uint64, tag="5")]
+    #[prost(string, tag="5")]
+    pub share_mint: ::prost::alloc::string::String,
+    #[prost(string, tag="6")]
+    pub share_token_acc: ::prost::alloc::string::String,
+    #[prost(uint32, tag="7")]
+    pub share_decimals: u32,
+    #[prost(uint64, tag="8")]
     pub deposit_limit: u64,
-    #[prost(uint64, tag="6")]
+    #[prost(uint64, tag="9")]
     pub min_user_deposit: u64,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]

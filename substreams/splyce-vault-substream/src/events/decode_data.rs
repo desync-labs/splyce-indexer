@@ -27,6 +27,9 @@ impl DecodeVaultData for VaultInitEvent {
             underlying_mint: bs58::encode(event.underlying_mint).into_string(),
             underlying_token_acc: bs58::encode(event.underlying_token_acc).into_string(),
             underlying_decimals: u32::from(event.underlying_decimals),
+            share_mint: bs58::encode(event.share_mint).into_string(),
+            share_token_acc: bs58::encode(event.share_token_acc).into_string(),
+            share_decimals: u32::from(event.share_decimals),
             deposit_limit: event.deposit_limit,
             min_user_deposit: event.min_user_deposit,
         };

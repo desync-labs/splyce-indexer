@@ -10,8 +10,11 @@ message VaultInitEvent {
   string underlying_mint = 2;
   string underlying_token_acc = 3;
   uint32 underlying_decimals = 4;
-  uint64 deposit_limit = 5;
-  uint64 min_user_deposit = 6;
+  string share_mint = 5;
+  string share_token_acc = 6;
+  uint32 share_decimals = 7;
+  uint64 deposit_limit = 8;
+  uint64 min_user_deposit = 9;
 }
 
 message StrategyInitEvent {
