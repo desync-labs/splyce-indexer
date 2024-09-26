@@ -22,7 +22,11 @@ export function createVaultEntity(vaultInitEvent: VaultInitEvent, blockTimestamp
         // vault.strategyIds = [];
         
         //Create token entity
-        vault.token  =  getOrCreateTokenEntity(vaultInitEvent).id;
+        vault.token  =  getOrCreateUnderlyingTokenEntity(vaultInitEvent).id;
+
+        //Create token entity
+        vault.shareToken = getOrCreateShareTokenEntity(vaultInitEvent).id;
+        // vault.sh  =  getOrCreateUnderlyingTokenEntity(vaultInitEvent).id;
 
         vault.balanceTokens = BIGINT_ZERO;
         vault.balanceTokensIdle = BIGINT_ZERO;
@@ -35,11 +39,24 @@ export function createVaultEntity(vaultInitEvent: VaultInitEvent, blockTimestamp
 }
 
 //TODO: Move this to token library
-function getOrCreateTokenEntity(vaultInitEvent: VaultInitEvent): Token {
+function getOrCreateUnderlyingTokenEntity(vaultInitEvent: VaultInitEvent): Token {
     let token = Token.load(vaultInitEvent.underlyingMint);
     if (token == null) {
         token = new Token(vaultInitEvent.underlyingMint);
         token.decimals = vaultInitEvent.underlyingDecimals;
+        token.symbol = ""; //TODO: Get symbol from mint
+        token.name = "";   //TODO: Get name from mint 
+        token.save();
+    }
+
+    return token as Token;
+}
+
+function getOrCreateShareTokenEntity(vaultInitEvent: VaultInitEvent): Token {
+    let token = Token.load(vaultInitEvent.shareMint);
+    if (token == null) {
+        token = new Token(vaultInitEvent.shareMint);
+        token.decimals = vaultInitEvent.shareDecimals;
         token.symbol = ""; //TODO: Get symbol from mint
         token.name = "";   //TODO: Get name from mint 
         token.save();

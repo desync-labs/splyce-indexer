@@ -14,6 +14,8 @@ type Vault @entity {
   id: ID!
   "Token this Vault will accrue"
   token: Token! 
+  "Token representing Shares in the Vault"
+  shareToken: Token!
   "The maximum amount of tokens that can be deposited in this Vault"
   depositLimit: BigInt!
   "Is vault in shutdown"
@@ -236,7 +238,7 @@ type AccountVaultPosition @entity {
   "Vault token"
   token: Token!
   # "Vault share token"
-  # shareToken: Token!
+  shareToken: Token!
   # "Created in transaction"
   # transaction: Transaction!
   # "Latest account update for this Vault"

@@ -18,10 +18,19 @@ export class VaultInitEvent {
     writer.uint32(32);
     writer.uint32(message.underlyingDecimals);
 
-    writer.uint32(40);
+    writer.uint32(42);
+    writer.string(message.shareMint);
+
+    writer.uint32(50);
+    writer.string(message.shareTokenAcc);
+
+    writer.uint32(56);
+    writer.uint32(message.shareDecimals);
+
+    writer.uint32(64);
     writer.uint64(message.depositLimit);
 
-    writer.uint32(48);
+    writer.uint32(72);
     writer.uint64(message.minUserDeposit);
   }
 
@@ -49,10 +58,22 @@ export class VaultInitEvent {
           break;
 
         case 5:
-          message.depositLimit = reader.uint64();
+          message.shareMint = reader.string();
           break;
 
         case 6:
+          message.shareTokenAcc = reader.string();
+          break;
+
+        case 7:
+          message.shareDecimals = reader.uint32();
+          break;
+
+        case 8:
+          message.depositLimit = reader.uint64();
+          break;
+
+        case 9:
           message.minUserDeposit = reader.uint64();
           break;
 
@@ -69,6 +90,9 @@ export class VaultInitEvent {
   underlyingMint: string;
   underlyingTokenAcc: string;
   underlyingDecimals: u32;
+  shareMint: string;
+  shareTokenAcc: string;
+  shareDecimals: u32;
   depositLimit: u64;
   minUserDeposit: u64;
 
@@ -77,6 +101,9 @@ export class VaultInitEvent {
     underlyingMint: string = "",
     underlyingTokenAcc: string = "",
     underlyingDecimals: u32 = 0,
+    shareMint: string = "",
+    shareTokenAcc: string = "",
+    shareDecimals: u32 = 0,
     depositLimit: u64 = 0,
     minUserDeposit: u64 = 0
   ) {
@@ -84,6 +111,9 @@ export class VaultInitEvent {
     this.underlyingMint = underlyingMint;
     this.underlyingTokenAcc = underlyingTokenAcc;
     this.underlyingDecimals = underlyingDecimals;
+    this.shareMint = shareMint;
+    this.shareTokenAcc = shareTokenAcc;
+    this.shareDecimals = shareDecimals;
     this.depositLimit = depositLimit;
     this.minUserDeposit = minUserDeposit;
   }
