@@ -13,9 +13,15 @@ pub struct VaultInitEvent {
     pub underlying_token_acc: ::prost::alloc::string::String,
     #[prost(uint32, tag="4")]
     pub underlying_decimals: u32,
-    #[prost(uint64, tag="5")]
+    #[prost(string, tag="5")]
+    pub share_mint: ::prost::alloc::string::String,
+    #[prost(string, tag="6")]
+    pub share_token_acc: ::prost::alloc::string::String,
+    #[prost(uint32, tag="7")]
+    pub share_decimals: u32,
+    #[prost(uint64, tag="8")]
     pub deposit_limit: u64,
-    #[prost(uint64, tag="6")]
+    #[prost(uint64, tag="9")]
     pub min_user_deposit: u64,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
@@ -128,6 +134,38 @@ pub struct StrategyWithdrawEvent {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct UpdatedCurrentDebtForStrategyEvent {
+    #[prost(string, tag="1")]
+    pub vault_index: ::prost::alloc::string::String,
+    #[prost(string, tag="2")]
+    pub strategy_key: ::prost::alloc::string::String,
+    #[prost(uint64, tag="3")]
+    pub total_idle: u64,
+    #[prost(uint64, tag="4")]
+    pub total_debt: u64,
+    #[prost(uint64, tag="5")]
+    pub new_debt: u64,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct StrategyReportedEvent {
+    #[prost(string, tag="1")]
+    pub strategy_key: ::prost::alloc::string::String,
+    #[prost(uint64, tag="2")]
+    pub gain: u64,
+    #[prost(uint64, tag="3")]
+    pub loss: u64,
+    #[prost(uint64, tag="4")]
+    pub current_debt: u64,
+    #[prost(uint64, tag="5")]
+    pub protocol_fees: u64,
+    #[prost(uint64, tag="6")]
+    pub total_fees: u64,
+    #[prost(int64, tag="7")]
+    pub timestamp: i64,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct VaultEvent {
     #[prost(string, tag="1000")]
     pub transaction_hash: ::prost::alloc::string::String,
@@ -135,7 +173,7 @@ pub struct VaultEvent {
     pub block_height: u64,
     #[prost(int64, tag="1002")]
     pub block_timestamp: i64,
-    #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4, 5, 6, 7, 8")]
+    #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4, 5, 6, 7, 8, 9, 10")]
     pub event: ::core::option::Option<vault_event::Event>,
 }
 /// Nested message and enum types in `VaultEvent`.
@@ -159,6 +197,10 @@ pub mod vault_event {
         StrategyDeposit(super::StrategyDepositEvent),
         #[prost(message, tag="8")]
         StrategyWithdraw(super::StrategyWithdrawEvent),
+        #[prost(message, tag="9")]
+        UpdatedDebtForStrategy(super::UpdatedCurrentDebtForStrategyEvent),
+        #[prost(message, tag="10")]
+        StrategyReported(super::StrategyReportedEvent),
     }
 }
 /// Raw logs from the vault program

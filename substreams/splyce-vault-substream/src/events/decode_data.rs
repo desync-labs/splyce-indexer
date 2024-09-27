@@ -1,5 +1,5 @@
 use anchor_lang::AnchorDeserialize;
-use crate::{event_logs_structs::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog}, vault_logs::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog}}, pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrategyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent}};
+use crate::{event_logs_structs::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog,StrategyReportedLog}, vault_logs::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog, UpdatedCurrentDebtForStrategyLog}}, pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrategyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent, UpdatedCurrentDebtForStrategyEvent,StrategyReportedEvent}};
 
 use std::error::Error;
 use substreams::log;
@@ -27,6 +27,9 @@ impl DecodeVaultData for VaultInitEvent {
             underlying_mint: bs58::encode(event.underlying_mint).into_string(),
             underlying_token_acc: bs58::encode(event.underlying_token_acc).into_string(),
             underlying_decimals: u32::from(event.underlying_decimals),
+            share_mint: bs58::encode(event.share_mint).into_string(),
+            share_token_acc: bs58::encode(event.share_token_acc).into_string(),
+            share_decimals: u32::from(event.share_decimals),
             deposit_limit: event.deposit_limit,
             min_user_deposit: event.min_user_deposit,
         };
@@ -206,5 +209,53 @@ impl DecodeVaultData for StrategyWithdrawEvent {
         };
     
         Ok(withdraw_event)
+    }
+}
+
+impl DecodeVaultData for UpdatedCurrentDebtForStrategyEvent {
+
+    fn descriminator() -> [u8; 8] {
+        utils::get_descriminator("UpdatedCurrentDebtForStrategyEvent")
+    }
+
+    fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
+        
+        let event: UpdatedCurrentDebtForStrategyLog = AnchorDeserialize::deserialize(data)
+                        .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
+    
+        let update_debt_event: UpdatedCurrentDebtForStrategyEvent = UpdatedCurrentDebtForStrategyEvent { 
+            vault_index: bs58::encode(event.vault_index).into_string(),
+            strategy_key: bs58::encode(event.strategy_key).into_string(),
+            total_idle: event.total_idle,
+            total_debt: event.total_debt,
+            new_debt: event.new_debt
+        };
+    
+        Ok(update_debt_event)
+    }
+}
+
+impl DecodeVaultData for StrategyReportedEvent {
+
+    fn descriminator() -> [u8; 8] {
+        utils::get_descriminator("StrategyReportedEvent")
+    }
+
+    fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
+        
+        let event: StrategyReportedLog = AnchorDeserialize::deserialize(data)
+                        .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
+    
+        let strategy_reported: StrategyReportedEvent = StrategyReportedEvent { 
+            strategy_key: bs58::encode(event.strategy_key).into_string(),
+            gain: event.gain,
+            loss: event.loss,
+            current_debt: event.current_debt,
+            protocol_fees: event.protocol_fees,
+            total_fees: event.total_fees,
+            timestamp: event.timestamp
+        };
+    
+        Ok(strategy_reported)
     }
 }

@@ -14,6 +14,8 @@ type Vault @entity {
   id: ID!
   "Token this Vault will accrue"
   token: Token! 
+  "Token representing Shares in the Vault"
+  shareToken: Token!
   "The maximum amount of tokens that can be deposited in this Vault"
   depositLimit: BigInt!
   "Is vault in shutdown"
@@ -32,6 +34,16 @@ type Vault @entity {
   deposits: [Deposit!]! @derivedFrom(field: "vault")
   "Token withdrawals from the Vault"
   withdrawals: [Withdrawal!]! @derivedFrom(field: "vault")
+  "Current supply of Shares"
+  sharesSupply: BigInt!
+  "Balance of Tokens in the Vault and its Strategies"
+  balanceTokens: BigInt!
+  "Current idle Token balance"
+  balanceTokensIdle: BigInt! # Tokens in the Vault contract
+  "Creation timestamp"
+  activation: BigInt!
+  "Historical Annual Percentage Rate."
+  historicalApr: [VaultHistoricalApr!] @derivedFrom(field: "vault")
   # "Strategy Ids for this vault"
   # strategyIds: [Strategy!]!
 }
@@ -58,9 +70,81 @@ type Strategy @entity {
   depositPeriodEnds: BigInt!
   "Lock period ends"
   lockPeriodEnds: BigInt!
+  "The current debt the strategy has."
+  currentDebt: BigInt!
+  "The maximum debt the strategy is allowed to have."
+  maxDebt: BigInt!
+  "Annual Percentage Rate of the Strategy."
+  apr: BigDecimal!
+  "Creation timestamp"
+  activation: BigInt!
+    "The amount of assets this strategy manages that should not be included in Yearn's Total Value Locked (TVL) calculation across it's ecosystem."
+  delegatedAssets: BigInt
+  "The latest report for this Strategy"
+  latestReport: StrategyReport
+  "The reports created by this strategy."
+  reports: [StrategyReport!]! @derivedFrom(field: "strategy")
   # "Vaults that this strategy is active"
   # activeOnVaults: [Vault!] @derivedFrom(field: "strategies")
+  reportsCount: BigDecimal!
+    "Historical Annual Percentage Rate of teh Strategy."
+  historicalApr: [StrategyHistoricalApr!] @derivedFrom(field: "strategy")
+}
 
+type StrategyReport @entity {
+  "The Strategy Report ID."
+  id: ID!
+  "Timestamp the strategy report was most recently updated."
+  timestamp: BigInt!
+  "Blocknumber the strategy report was most recently updated."
+  blockNumber: BigInt!
+  # "Ethereum Transaction"
+  # transaction: Transaction!
+  "Transaction Hash"
+  transactionHash: String!
+  "The Strategy reference."
+  strategy: Strategy!
+  "The reported gain amount for the strategy."
+  gain: BigInt!
+  "The reported loss amount for the strategy."
+  loss: BigInt!
+  "The reported current debt amount for the strategy."
+  currentDebt: BigInt!
+  "The reported protocol fees amount for the strategy."
+  protocolFees: BigInt!
+  "The reported total fees amount for the strategy."
+  totalFees: BigInt!
+  # "The reported total refunds amount for the strategy."
+  # totalRefunds: BigInt!
+  # "Vault state"
+  # vaultUpdate: VaultUpdate!
+  "The results created by this report. They are generated comparing the previous report and the current one."
+  results: [StrategyReportResult!]! @derivedFrom(field: "currentReport")
+}
+
+type StrategyReportResult @entity {
+  "The Strategy Report Result ID."
+  id: ID!
+  "Timestamp the strategy report was most recently updated."
+  timestamp: BigInt!
+  "Blocknumber the strategy report was most recently updated."
+  blockNumber: BigInt!
+  "The current strategy report."
+  currentReport: StrategyReport!
+  "The previous strategy report."
+  previousReport: StrategyReport!
+  startTimestamp: BigInt!
+  endTimestamp: BigInt!
+  "The duration (in days) from the previous report."
+  duration: BigDecimal!
+  "Duration percentage rate."
+  durationPr: BigDecimal!
+  "Annual Percentage Rate."
+  apr: BigDecimal!
+  # "Ethereum Transaction"
+  # transaction: Transaction!
+  "Transaction Hash"
+  transactionHash: String!
 }
 
 type Deposit @entity {
@@ -154,7 +238,7 @@ type AccountVaultPosition @entity {
   "Vault token"
   token: Token!
   # "Vault share token"
-  # shareToken: Token!
+  shareToken: Token!
   # "Created in transaction"
   # transaction: Transaction!
   # "Latest account update for this Vault"
@@ -169,4 +253,24 @@ type AccountVaultPosition @entity {
   balancePosition: BigInt!
   "The accumulated profit balance for the account/vault. It is only calculated when the user withdraws all the shares."
   balanceProfit: BigInt!
+}
+
+type VaultHistoricalApr @entity {
+  id: ID!
+  "time in UTC"
+  timestamp: BigInt!
+  "The Annual Percentage Rate"
+  apr: BigDecimal!
+  "The Vault"
+  vault: Vault!
+}
+
+type StrategyHistoricalApr @entity {
+  id: ID!
+  "time in UTC"
+  timestamp: BigInt!
+  "The Annual Percentage Rate"
+  apr: BigDecimal!
+  "The Strategy"
+  strategy: Strategy!
 }
