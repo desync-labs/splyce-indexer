@@ -80,6 +80,11 @@ message StrategyWithdrawEvent {
   uint64 total_assets = 3;
 }
 
+message SetPerformanceFeeEvent {
+  string account_key = 1;
+  uint64 fee = 2;
+}
+
 message UpdatedCurrentDebtForStrategyEvent {
   string vault_index = 1;
   string strategy_key = 2;
@@ -110,6 +115,7 @@ message VaultEvent {
     StrategyWithdrawEvent strategyWithdraw = 8;
     UpdatedCurrentDebtForStrategyEvent updatedDebtForStrategy = 9;
     StrategyReportedEvent strategyReported = 10;
+    SetPerformanceFeeEvent setPerformanceFee = 11;
   }
   string transaction_hash = 1000;
   uint64 block_height = 1001;
