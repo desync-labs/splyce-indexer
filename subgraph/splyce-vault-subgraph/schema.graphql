@@ -89,6 +89,8 @@ type Strategy @entity {
   reportsCount: BigDecimal!
     "Historical Annual Percentage Rate of teh Strategy."
   historicalApr: [StrategyHistoricalApr!] @derivedFrom(field: "strategy")
+  "The reported protocol fees amount for the strategy."
+  performanceFees: BigInt!
 }
 
 type StrategyReport @entity {

@@ -8,6 +8,7 @@ import { UpdatedCurrentDebtForStrategyEvent } from "../pb/vault/events/v1/Update
 import * as vaultLibrary from '../vault/vault';
 import * as strategyReportLibrary from './strategy-report';
 import * as strategyReportResultLibrary from './strategy-report-result';
+import { SetPerformanceFeeEvent } from "../pb/vault/events/v1/SetPerformanceFeeEvent";
 
 
 export function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitEvent): Strategy {
@@ -23,6 +24,7 @@ export function getOrCreateStrategyEntity(strategyInitializeEvent: StrategyInitE
         strategy.lockPeriodEnds =  BigInt.fromI64(strategyInitializeEvent.lockPeriodEnds);
         strategy.currentDebt = BIGINT_ZERO
         strategy.maxDebt = BIGINT_ZERO
+        strategy.performanceFees = BIGINT_ZERO;
 
         //TODO: Will be updated with report processing logic
         strategy.apr = BIGDECIMAL_ZERO;
@@ -134,3 +136,11 @@ export function createReport(
       return null;
     }
   }
+
+export function updatePerformanceFee(performanceFeeEvent: SetPerformanceFeeEvent): void {
+    let strategy = Strategy.load(performanceFeeEvent.accountKey);
+    if(strategy != null){
+        strategy.performanceFees = BigInt.fromI64(performanceFeeEvent.fee);
+        strategy.save();
+    }
+}
