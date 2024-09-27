@@ -32,6 +32,7 @@ impl DecodeVaultData for VaultInitEvent {
             share_decimals: u32::from(event.share_decimals),
             deposit_limit: event.deposit_limit,
             min_user_deposit: event.min_user_deposit,
+            performance_fee: event.performance_fee, 
         };
     
         Ok(init_event)

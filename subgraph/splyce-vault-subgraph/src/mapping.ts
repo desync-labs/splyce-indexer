@@ -10,7 +10,7 @@ import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "./constants";
 import * as strategyLiberary from './strategy/strategy';
 import { UpdatedCurrentDebtForStrategyEvent } from "./pb/vault/events/v1/UpdatedCurrentDebtForStrategyEvent";
 import { StrategyReportedEvent } from "./pb/vault/events/v1/StrategyReportedEvent";
-import { SetPerformanceFeeEvent, SetPerformanceFeeEvent } from "./pb/vault/events/v1/SetPerformanceFeeEvent";
+import {  SetPerformanceFeeEvent } from "./pb/vault/events/v1/SetPerformanceFeeEvent";
 
 export function handleTransactions(bytes: Uint8Array): void {
     const vaultEvent: VaultEvent = Protobuf.decode<VaultEvent>(bytes, VaultEvent.decode);

@@ -46,6 +46,8 @@ type Vault @entity {
   historicalApr: [VaultHistoricalApr!] @derivedFrom(field: "vault")
   # "Strategy Ids for this vault"
   # strategyIds: [Strategy!]!
+  "The reported protocol fees amount for the vault."
+  performanceFees: BigInt!
 }
 
 # enum StrategyType {

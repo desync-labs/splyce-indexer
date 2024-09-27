@@ -33,6 +33,7 @@ export function createVaultEntity(vaultInitEvent: VaultInitEvent, blockTimestamp
         vault.sharesSupply = BIGINT_ZERO;
 
         vault.activation = BigInt.fromI64(blockTimestamp);
+        vault.performanceFees = BigInt.fromI64(vaultInitEvent.performanceFee);
     
         vault.save();
     }
