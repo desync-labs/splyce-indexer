@@ -7,6 +7,9 @@ pub struct VaultInitLog {
     pub underlying_mint: [u8 ; 32],
     pub underlying_token_acc: [u8 ; 32],
     pub underlying_decimals: u8,
+    pub share_mint: [u8 ; 32],
+    pub share_token_acc: [u8 ; 32],
+    pub share_decimals: u8,
     pub deposit_limit: u64,
     pub min_user_deposit: u64,
 }
@@ -19,6 +22,15 @@ pub struct VaultAddStrategyLog {
     pub max_debt: u64,
     pub last_update: i64,
     pub is_active: bool,    
+}
+
+#[derive(Debug, AnchorDeserialize, AnchorSerialize)]
+pub struct UpdatedCurrentDebtForStrategyLog {
+  pub vault_index: [u8; 8],
+  pub strategy_key: Pubkey,
+  pub total_idle: u64,
+  pub total_debt: u64,
+  pub new_debt: u64,
 }
 
 #[derive(Debug, AnchorDeserialize, AnchorSerialize)]

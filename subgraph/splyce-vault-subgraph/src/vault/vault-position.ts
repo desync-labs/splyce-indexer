@@ -37,7 +37,7 @@ export function deposit(
       accountVaultPosition.vault = vault.id;
       accountVaultPosition.account = account.id;
       accountVaultPosition.token = vault.token;
-    //   accountVaultPosition.shareToken = vault.shareToken;
+      accountVaultPosition.shareToken = vault.shareToken;
     //   accountVaultPosition.transaction = transaction.id;
       accountVaultPosition.balanceTokens = depositedTokens;
       accountVaultPosition.balanceShares = balanceShares;

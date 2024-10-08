@@ -27,3 +27,14 @@ pub struct StrategyWithdrawLog {
     pub amount: u64,
     pub total_assets: u64,
 }
+
+#[derive(Debug, AnchorDeserialize, AnchorSerialize)]
+pub struct StrategyReportedLog {
+    pub strategy_key: [u8 ; 32],
+    pub gain: u64,
+    pub loss: u64,
+    pub current_debt: u64,
+    pub protocol_fees: u64,
+    pub total_fees: u64,
+    pub timestamp: i64,
+}
