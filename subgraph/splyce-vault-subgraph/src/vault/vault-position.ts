@@ -66,7 +66,21 @@ export function deposit(
     total_shares: BigInt
   ): void {
     let token = Token.load(vault.token) as Token;
-    let pricePerShare =  total_debt.plus(total_idle).div(total_shares); 
+
+    let pricePerShare = BIGINT_ZERO
+    if(total_shares.gt(BIGINT_ZERO)) 
+    {
+        pricePerShare =  total_debt.plus(total_idle).div(total_shares); 
+    }else{
+        log.info('total_shares is zero!.', []);
+        pricePerShare =  total_debt.plus(total_idle);
+    }
+
+    if(token.decimals != 0){
+        log.info('Token decimals is zero!.', []);
+        return;
+    }
+
     let balancePosition = balanceShares.times(pricePerShare).div(BigInt.fromI32(token.decimals));
 
     let vaultPositionId = buildId(account, vault);
