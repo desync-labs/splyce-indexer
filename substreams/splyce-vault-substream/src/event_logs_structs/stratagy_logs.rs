@@ -38,3 +38,9 @@ pub struct StrategyReportedLog {
     pub total_fees: u64,
     pub timestamp: i64,
 }
+
+#[derive(Debug, AnchorDeserialize, AnchorSerialize)]
+pub struct SetPerformanceFeeLog {
+    pub account_key: [u8 ; 32],
+    pub fee: u64,
+  }

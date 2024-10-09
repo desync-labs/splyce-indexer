@@ -10,6 +10,7 @@ import { BIGDECIMAL_ZERO, BIGINT_ZERO } from "./constants";
 import * as strategyLiberary from './strategy/strategy';
 import { UpdatedCurrentDebtForStrategyEvent } from "./pb/vault/events/v1/UpdatedCurrentDebtForStrategyEvent";
 import { StrategyReportedEvent } from "./pb/vault/events/v1/StrategyReportedEvent";
+import {  SetPerformanceFeeEvent } from "./pb/vault/events/v1/SetPerformanceFeeEvent";
 
 export function handleTransactions(bytes: Uint8Array): void {
     const vaultEvent: VaultEvent = Protobuf.decode<VaultEvent>(bytes, VaultEvent.decode);
@@ -57,6 +58,9 @@ export function handleTransactions(bytes: Uint8Array): void {
                                 vaultEvent.blockHeight,
                                 vaultEvent.blockTimestamp
                             );
+    }else if(vaultEvent.setPerformanceFee != null){
+        log.info("Setting performance fee for strategy {}",[vaultEvent.setPerformanceFee!.accountKey]);
+        handlePerformanceFeeUpdate(vaultEvent.setPerformanceFee!);
     }   
 
 }
@@ -111,4 +115,13 @@ export function handleStrategyReported(strategyReportedEvent: StrategyReportedEv
         BigInt.fromI64(timestamp)
     );
 
+}
+
+function handlePerformanceFeeUpdate(performanceFeeEvent: SetPerformanceFeeEvent): void {
+    log.info("Update peroformance fee for strategy {} with fee {}",
+                [performanceFeeEvent.accountKey,
+                    performanceFeeEvent.fee.toString()
+    ]);
+
+    strategyLiberary.updatePerformanceFee(performanceFeeEvent);
 }

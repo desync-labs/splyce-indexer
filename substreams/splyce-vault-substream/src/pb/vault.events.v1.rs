@@ -23,6 +23,8 @@ pub struct VaultInitEvent {
     pub deposit_limit: u64,
     #[prost(uint64, tag="9")]
     pub min_user_deposit: u64,
+    #[prost(uint64, tag="10")]
+    pub performance_fee: u64,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
@@ -134,6 +136,14 @@ pub struct StrategyWithdrawEvent {
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]
+pub struct SetPerformanceFeeEvent {
+    #[prost(string, tag="1")]
+    pub account_key: ::prost::alloc::string::String,
+    #[prost(uint64, tag="2")]
+    pub fee: u64,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
 pub struct UpdatedCurrentDebtForStrategyEvent {
     #[prost(string, tag="1")]
     pub vault_index: ::prost::alloc::string::String,
@@ -173,7 +183,7 @@ pub struct VaultEvent {
     pub block_height: u64,
     #[prost(int64, tag="1002")]
     pub block_timestamp: i64,
-    #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4, 5, 6, 7, 8, 9, 10")]
+    #[prost(oneof="vault_event::Event", tags="1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11")]
     pub event: ::core::option::Option<vault_event::Event>,
 }
 /// Nested message and enum types in `VaultEvent`.
@@ -201,6 +211,8 @@ pub mod vault_event {
         UpdatedDebtForStrategy(super::UpdatedCurrentDebtForStrategyEvent),
         #[prost(message, tag="10")]
         StrategyReported(super::StrategyReportedEvent),
+        #[prost(message, tag="11")]
+        SetPerformanceFee(super::SetPerformanceFeeEvent),
     }
 }
 /// Raw logs from the vault program

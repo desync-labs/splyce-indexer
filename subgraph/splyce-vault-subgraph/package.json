@@ -9,9 +9,9 @@
     "remove-local": "graph remove --node http://localhost:8020/ splyce-vault-subgraph",
     "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 splyce-vault-subgraph",
 
-    "create-dev": "graph create --node http://35.238.169.178:8020/ splyce-vault-subgraph",
-    "remove-dev": "graph remove --node http://35.238.169.178:8020/ splyce-vault-subgraph",
-    "deploy-dev": "graph deploy --node http://35.238.169.178:8020/ splyce-vault-subgraph",
+    "create-dev": "graph create --node http://dev.solana.splyce.local:8020/ splyce-vault-subgraph",
+    "remove-dev": "graph remove --node http://dev.solana.splyce.local:8020/ splyce-vault-subgraph",
+    "deploy-dev": "graph deploy --node http://dev.solana.splyce.local:8020/ splyce-vault-subgraph",
 
     "test": "graph test"
     

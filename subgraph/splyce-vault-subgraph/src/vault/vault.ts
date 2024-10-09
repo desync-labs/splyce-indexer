@@ -33,6 +33,7 @@ export function createVaultEntity(vaultInitEvent: VaultInitEvent, blockTimestamp
         vault.sharesSupply = BIGINT_ZERO;
 
         vault.activation = BigInt.fromI64(blockTimestamp);
+        vault.performanceFees = BigInt.fromI64(vaultInitEvent.performanceFee);
     
         vault.save();
     }
@@ -94,7 +95,7 @@ export function deposit(vaultEvent: VaultEvent): void{
     if(vault != null){
         vault.totalDebt = BigInt.fromU64(vaultEvent.vaultDeposit!.totalDebt);
         vault.totalIdle = BigInt.fromU64(vaultEvent.vaultDeposit!.amount);
-        vault.totalShare = BigInt.fromU64(vaultEvent.vaultDeposit!.share);
+        vault.totalShare =BigInt.fromU64(vaultEvent.vaultDeposit!.totalShare);
 
         //TODO: This is as per fathom logic.. 
         //will be break out into another common function when vaultUpdate entity is ready
@@ -102,7 +103,7 @@ export function deposit(vaultEvent: VaultEvent): void{
         //TODO: Rcheck this logic, we dont have share token on vault entity/vault on-chain program
         //logic from fathom vault subgraph 
         //let balanceTokens: BigInt = getTotalAssets(Address.fromString(vault.shareToken));
-        vault.balanceTokens = vault.totalDebt.plus(vault.totalIdle);
+        vault.balanceTokens = vault.totalShare;
 
         vault.save();
 
@@ -121,7 +122,11 @@ export function deposit(vaultEvent: VaultEvent): void{
 }
 
 export function withdraw(vaultEvent: VaultEvent): void {
-    createWithdrawEntity(vaultEvent);
+    let withdrawal = createWithdrawEntity(vaultEvent);
+
+    let account = accountLibrary.updateAccountEntity(vaultEvent.withdrwal!.authority,
+        vaultEvent.withdrwal!.tokenAccount,
+        vaultEvent.withdrwal!.shareAccount);
 
     let vault = Vault.load(vaultEvent.withdrwal!.vaultIndex);
     if(vault != null){
@@ -131,7 +136,21 @@ export function withdraw(vaultEvent: VaultEvent): void {
         //TODO: This is as per fathom logic.. 
         //will be break out into another common function when vaultUpdate entity is ready
         vault.balanceTokensIdle = vault.totalIdle;
+        vault.balanceTokens = vault.totalShare;
+
         vault.save();
+
+        vaultPosition.withdraw(
+            account,
+            vault,
+            vaultEvent.transactionHash,
+            withdrawal.tokenAmount,
+            withdrawal.sharesBurnt,
+            vault.totalShare,
+            vault.totalDebt, //TODO: totalDebt is not updated on vault withdrwal event
+            vault.totalIdle,
+            vault.totalShare //TODO: this is repeaed, check if this is correct
+        )
     }
 }
 

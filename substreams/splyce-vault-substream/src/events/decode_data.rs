@@ -1,5 +1,5 @@
 use anchor_lang::AnchorDeserialize;
-use crate::{event_logs_structs::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog,StrategyReportedLog}, vault_logs::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog, UpdatedCurrentDebtForStrategyLog}}, pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrategyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent, UpdatedCurrentDebtForStrategyEvent,StrategyReportedEvent}};
+use crate::{event_logs_structs::{stratagy_logs::{StrategyDepositLog, StrategyInitLog, StrategyWithdrawLog,StrategyReportedLog,SetPerformanceFeeLog}, vault_logs::{VaultAddStrategyLog, VaultDepositLog, VaultInitLog, VaultUpdateDepositLimitLog, VaultWithdrawlLog, UpdatedCurrentDebtForStrategyLog}}, pb::vault::events::v1::{StrategyDepositEvent, StrategyInitEvent, StrategyWithdrawEvent, VaultAddStrategyEvent, VaultDepositEvent, VaultInitEvent, VaultUpdateDepositLimitEvent, VaultWithdrawlEvent, UpdatedCurrentDebtForStrategyEvent,StrategyReportedEvent,SetPerformanceFeeEvent}};
 
 use std::error::Error;
 use substreams::log;
@@ -32,6 +32,7 @@ impl DecodeVaultData for VaultInitEvent {
             share_decimals: u32::from(event.share_decimals),
             deposit_limit: event.deposit_limit,
             min_user_deposit: event.min_user_deposit,
+            performance_fee: event.performance_fee, 
         };
     
         Ok(init_event)
@@ -254,6 +255,26 @@ impl DecodeVaultData for StrategyReportedEvent {
             protocol_fees: event.protocol_fees,
             total_fees: event.total_fees,
             timestamp: event.timestamp
+        };
+    
+        Ok(strategy_reported)
+    }
+}
+
+impl DecodeVaultData for SetPerformanceFeeEvent {
+
+    fn descriminator() -> [u8; 8] {
+        utils::get_descriminator("SetPerformanceFeeEvent")
+    }
+
+    fn parse_from_data(data: &mut &[u8]) -> std::result::Result<Self, Box<dyn Error>> {
+        
+        let event: SetPerformanceFeeLog = AnchorDeserialize::deserialize(data)
+                        .map_err(|e| Box::new(e) as Box<dyn Error>)?;    
+    
+        let strategy_reported: SetPerformanceFeeEvent = SetPerformanceFeeEvent { 
+            account_key: bs58::encode(event.account_key).into_string(),
+            fee: event.fee
         };
     
         Ok(strategy_reported)
