@@ -8,7 +8,7 @@ dataSources:
     name: SplyceVault
     network: solana-mainnet-beta
     source:
-      startBlock: 182676982
+      startBlock: 282676982
       package:
         moduleName: map_vault_events_from_logs
         file: splyce-vault-explorer-v1.0.0.spkg

@@ -7,7 +7,7 @@ package:
     Common Solana modules that allow you to consume transactions and instructions, and apply filters to efficiently retrieve the data that you need.
     To consume data, use the following optimized modules:
     - `filtered_txs_by_instructions_without_votes`: allows you consume transactions containing specific instruction types (based on the program ID).
-network: solana
+network: solana-mainnet-beta
 
 imports:
   solana: https://github.com/streamingfast/firehose-solana/releases/download/v0.1.1/solana-v0.1.1.spkg
@@ -97,6 +97,7 @@ modules:
 
   - name: map_vault_events_from_logs
     kind: map
+    initialBlock: 282676982
     inputs:
       - map: filtered_event_logs
     output:
