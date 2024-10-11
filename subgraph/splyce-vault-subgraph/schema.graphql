@@ -48,12 +48,9 @@ type Vault @entity {
   # strategyIds: [Strategy!]!
   "The reported protocol fees amount for the vault."
   performanceFees: BigInt!
+  "The vault program derived address"
+  address: String!
 }
-
-# enum StrategyType {
-#   Simple
-#   TradeFinTech
-# }
 
 type Strategy @entity {
   "Strategy address"

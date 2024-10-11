@@ -11,6 +11,7 @@ export function createVaultEntity(vaultInitEvent: VaultInitEvent, blockTimestamp
     let vault = Vault.load(vaultInitEvent.vaultIndex);
     if (vault == null) {
         vault = new Vault(vaultInitEvent.vaultIndex);
+        vault.address = vaultInitEvent.vaultPda;
         vault.depositLimit = BigInt.fromU64(vaultInitEvent.depositLimit);
         vault.shutdown = false;
         vault.totalDebt =    BIGINT_ZERO;

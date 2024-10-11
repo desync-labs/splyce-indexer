@@ -1,8 +1,8 @@
 specVersion: v0.1.0
 package:
-  name: "splyce_vault_explorer"
+  name: "splyce_vault"
   version: v1.0.0
-  image: ./solana.png
+  image: ./splyce-logo.png
   doc: |
     Common Solana modules that allow you to consume transactions and instructions, and apply filters to efficiently retrieve the data that you need.
     To consume data, use the following optimized modules:
@@ -64,24 +64,24 @@ modules:
       Example: to only consume TRANSACTIONS containing Token or ComputeBudget instructions: `program:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA || program:ComputeBudget111111111111111111111111111111`.
       Transactions containing `Vote111111111111111111111111111111111111111` are always excluded.
 
-  - name: filtered_instructions_without_votes
-    kind: map
-    inputs:
-      - params: string
-      - map: blocks_without_votes
-    output:
-      type: proto:sol.instructions.v1.Instructions
-    doc: |
-      `map_filter_instructions_without_votes` allows you to get instructions executed by a certain `program_id`, and returns the raw Instruction data model.
+  # - name: filtered_instructions_without_votes
+  #   kind: map
+  #   inputs:
+  #     - params: string
+  #     - map: blocks_without_votes
+  #   output:
+  #     type: proto:sol.instructions.v1.Instructions
+  #   doc: |
+  #     `map_filter_instructions_without_votes` allows you to get instructions executed by a certain `program_id`, and returns the raw Instruction data model.
 
-  - name: map_vault_events_from_instructions
-    kind: map
-    inputs:
-      - map: filtered_instructions_without_votes
-    output:
-      type: proto:vault.events.v1.VaultEvent
-    doc: |
-      `map_vault_events_from_instructions` allows you to get event vault data.
+  # - name: map_vault_events_from_instructions
+  #   kind: map
+  #   inputs:
+  #     - map: filtered_instructions_without_votes
+  #   output:
+  #     type: proto:vault.events.v1.VaultEvent
+  #   doc: |
+  #     `map_vault_events_from_instructions` allows you to get event vault data.
 
 
   - name: filtered_event_logs
@@ -92,19 +92,18 @@ modules:
     output:
       type: proto:vault.events.v1.VaultEventLogs
     doc: |
-      `filtered_event_logs` allows you to get instructions executed by a certain `program_id`, and returns the raw Instruction data model.
+      `filtered_event_logs` allows you to get raw logs from `program_id`, and returns the raw logs.
 
 
   - name: map_vault_events_from_logs
     kind: map
-    initialBlock: 282676982
+    initialBlock: 0
     inputs:
       - map: filtered_event_logs
     output:
       type: proto:vault.events.v1.VaultEvent
     doc: |
-      `map_vault_events_from_logs` allows you to get instructions executed by a certain `program_id`, and returns the raw Instruction data model.
+      `map_vault_events_from_logs` allows you to get parsed splyce vault events defined in `program_id`, and returns event protobuf object to be consumer by sink.
 
 params: # Default parameters for the filter modules. You can override these parameters based on your needs.
-  filtered_transactions_without_votes: "program:5R6bVKZfag4X9vW4nek6UNP8XXwH7cPaVohyAo1xfVEU || program:FeMChq4ZCFP8UstbyHnVyme3ATa2vtteLNCwms4jLMAj"
-  filtered_instructions_without_votes: "program:5R6bVKZfag4X9vW4nek6UNP8XXwH7cPaVohyAo1xfVEU || program:FeMChq4ZCFP8UstbyHnVyme3ATa2vtteLNCwms4jLMAj"
+  filtered_transactions_without_votes: "program:ATdWqQQrwKbwbGv2zmD2nfcXsmTVA62eXWEtundAdwfE || program:5rQVgdeNp4RMUXjL8B8ksajVNywLoS7rK9e5yD4pi983"

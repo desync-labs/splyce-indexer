@@ -13,7 +13,7 @@ npm install
 2. Generate the Protobuf of the Ethereum Explorer Substreams:
 
 ```bash
-buf generate --exclude-path="sf/substreams" --type="vault.events.v1.VaultEvent" splyce-vault-explorer-v1.0.0.spkg#format=bin
+buf generate --exclude-path="sf/substreams" --type="vault.events.v1.VaultEvent" splyce-vault-v1.0.0.spkg#format=bin
 ```
 
 You can follow the full tutorial in the [Substreams documentation](https://substreams.streamingfast.io/documentation/consume/subgraph/triggers).

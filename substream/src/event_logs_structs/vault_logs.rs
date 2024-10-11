@@ -13,6 +13,7 @@ pub struct VaultInitLog {
     pub deposit_limit: u64,
     pub min_user_deposit: u64,
     pub performance_fee: u64,
+    pub vault_pda: [u8 ; 32],
 }
 
 #[derive(Debug, AnchorDeserialize, AnchorSerialize)]

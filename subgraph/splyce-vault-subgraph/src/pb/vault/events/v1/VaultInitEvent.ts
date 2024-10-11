@@ -35,6 +35,9 @@ export class VaultInitEvent {
 
     writer.uint32(80);
     writer.uint64(message.performanceFee);
+
+    writer.uint32(90);
+    writer.string(message.vaultPda);
   }
 
   static decode(reader: Reader, length: i32): VaultInitEvent {
@@ -84,6 +87,10 @@ export class VaultInitEvent {
           message.performanceFee = reader.uint64();
           break;
 
+        case 11:
+          message.vaultPda = reader.string();
+          break;
+
         default:
           reader.skipType(tag & 7);
           break;
@@ -103,6 +110,7 @@ export class VaultInitEvent {
   depositLimit: u64;
   minUserDeposit: u64;
   performanceFee: u64;
+  vaultPda: string;
 
   constructor(
     vaultIndex: string = "",
@@ -114,7 +122,8 @@ export class VaultInitEvent {
     shareDecimals: u32 = 0,
     depositLimit: u64 = 0,
     minUserDeposit: u64 = 0,
-    performanceFee: u64 = 0
+    performanceFee: u64 = 0,
+    vaultPda: string = ""
   ) {
     this.vaultIndex = vaultIndex;
     this.underlyingMint = underlyingMint;
@@ -126,5 +135,6 @@ export class VaultInitEvent {
     this.depositLimit = depositLimit;
     this.minUserDeposit = minUserDeposit;
     this.performanceFee = performanceFee;
+    this.vaultPda = vaultPda;
   }
 }

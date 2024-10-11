@@ -16,3 +16,13 @@ Usually, you want to only listen for specific transactions or instruction types.
   Supported operators are: logical or `||`, logical and `&&` and parenthesis: `()`.
   Example: to only consume TRANSACTIONS containing Token or ComputeBudget instructions: `program:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA || program:ComputeBudget111111111111111111111111111111`.
   Transactions containing `Vote111111111111111111111111111111111111111` are always excluded.
+
+  - `filtered_event_logs`: allows you to consume transactions logs from specific program_id based on a filter string and provide raw logs from transaction.
+  Supported operators are: logical or `||`, logical and `&&` and parenthesis: `()`.
+  Example: to only consume TRANSACTIONS containing Token or ComputeBudget instructions: `program:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA || program:ComputeBudget111111111111111111111111111111`.
+  Transactions containing `Vote111111111111111111111111111111111111111` are always excluded.
+
+  - `map_vault_events_from_logs`: allows you to consume transactions logs from specific program_id based on a filter string and provide parsed event protobuf from splyce vault program.
+  Supported operators are: logical or `||`, logical and `&&` and parenthesis: `()`.
+  Example: to only consume TRANSACTIONS containing Token or ComputeBudget instructions: `program:TokenkegQfeZyiNwAJbNbGKPFXCWuBvf9Ss623VQ5DA || program:ComputeBudget111111111111111111111111111111`.
+  Transactions containing `Vote111111111111111111111111111111111111111` are always excluded.

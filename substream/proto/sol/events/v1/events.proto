@@ -16,6 +16,7 @@ message VaultInitEvent {
   uint64 deposit_limit = 8;
   uint64 min_user_deposit = 9;
   uint64 performance_fee = 10;
+  string vault_pda = 11;
 }
 
 message StrategyInitEvent {

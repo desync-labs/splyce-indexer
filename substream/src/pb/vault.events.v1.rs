@@ -25,6 +25,8 @@ pub struct VaultInitEvent {
     pub min_user_deposit: u64,
     #[prost(uint64, tag="10")]
     pub performance_fee: u64,
+    #[prost(string, tag="11")]
+    pub vault_pda: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
 #[derive(Clone, PartialEq, ::prost::Message)]

@@ -6,12 +6,12 @@ schema:
 dataSources:
   - kind: substreams
     name: SplyceVault
-    network: solana-mainnet-beta
+    network: solana-mainnet
     source:
       startBlock: 282676982
       package:
         moduleName: map_vault_events_from_logs
-        file: splyce-vault-explorer-v1.0.0.spkg
+        file: splyce-vault-v1.0.0.spkg
     mapping:
       apiVersion: 0.0.7
       kind: substreams/graph-entities

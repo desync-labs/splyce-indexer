@@ -33,6 +33,7 @@ impl DecodeVaultData for VaultInitEvent {
             deposit_limit: event.deposit_limit,
             min_user_deposit: event.min_user_deposit,
             performance_fee: event.performance_fee, 
+            vault_pda: bs58::encode(event.vault_pda).into_string(),
         };
     
         Ok(init_event)
